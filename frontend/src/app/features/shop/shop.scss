@@ -1,0 +1,409 @@
+/* ================= HERO ================= */
+
+.shop-hero {
+  height: 420px;
+
+  background-image: url("/assets/images/hero/hero-banner.jpg");
+  background-size: cover;
+  background-position: center;
+
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+  color: white;
+
+  overflow: hidden;
+}
+
+/* HERO ZOOM EFFECT */
+
+.shop-hero::before {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  background-image: inherit;
+  background-size: cover;
+  background-position: center;
+
+  animation: heroZoom 18s ease-in-out infinite alternate;
+
+  z-index: 0;
+}
+
+@keyframes heroZoom {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.1);
+  }
+}
+
+/* HERO OVERLAY */
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0.45),
+    rgba(0,0,0,0.75)
+  );
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  z-index: 1;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+
+  max-width: 720px;
+  padding: 20px;
+}
+
+.hero-tag {
+  font-size: 12px;
+  letter-spacing: 3px;
+  color: #d4af37;
+  text-transform: uppercase;
+}
+
+.hero-content h1 {
+  font-size: clamp(2.4rem, 4vw, 3rem);
+  margin: 16px 0;
+  font-weight: 600;
+}
+
+.accent {
+  color: #d4af37;
+}
+
+.hero-content p {
+  color: #ddd;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+
+
+/* ================= CATEGORY SECTION ================= */
+
+.collections {
+  padding: 110px 8%;
+  background: #f7f7f7;
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 70px;
+}
+
+.section-subtitle {
+  font-size: 12px;
+  letter-spacing: 3px;
+  color: #d4af37;
+  text-transform: uppercase;
+}
+
+.section-title {
+  font-size: clamp(2rem, 3vw, 2.5rem);
+  margin-top: 12px;
+}
+
+.section-desc {
+  margin-top: 10px;
+  color: #777;
+}
+
+
+
+/* ================= CATEGORY GRID ================= */
+
+.gender-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 45px;
+
+  max-width: 1200px;
+  margin: auto;
+}
+
+
+
+/* ================= CATEGORY CARD ================= */
+
+.gender-card {
+  position: relative;
+
+  border-radius: 24px;
+  overflow: hidden;
+
+  padding: 50px;
+
+  color: white;
+
+  background-size: cover;
+  background-position: center;
+
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+/* DARK OVERLAY FOR TEXT VISIBILITY */
+
+.gender-card::before {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0.35),
+    rgba(0,0,0,0.75)
+  );
+
+  z-index: 1;
+}
+
+.gender-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+}
+
+
+
+/* BACKGROUND IMAGES */
+
+.gender-card.men {
+  background-image: url("/assets/images/categories/men.jpg");
+}
+
+.gender-card.women {
+  background-image: url("/assets/images/categories/women.jpg");
+}
+
+
+
+/* CONTENT */
+
+.gender-content {
+  position: relative;
+  z-index: 2;
+  margin-bottom: 30px;
+}
+
+.gender-content h3 {
+  font-size: 1.9rem;
+  color: #d4af37;
+  margin-bottom: 6px;
+}
+
+.gender-content p {
+  color: #e2e2e2;
+  margin-bottom: 12px;
+}
+
+
+
+/* EXPLORE LINK */
+
+.explore-link {
+  color: white;
+  font-weight: 500;
+  text-decoration: none;
+
+  border-bottom: 1px solid rgba(255,255,255,0.3);
+
+  transition: all 0.3s ease;
+}
+
+.explore-link:hover {
+  color: #d4af37;
+  border-color: #d4af37;
+}
+
+
+
+/* ================= SUB CATEGORY ================= */
+
+.sub-grid {
+  position: relative;
+  z-index: 2;
+
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.sub-card {
+  padding: 14px;
+
+  border-radius: 12px;
+
+  text-align: center;
+
+  background: rgba(255,255,255,0.85);
+
+  color: #222;
+  font-weight: 500;
+
+  text-decoration: none;
+
+  backdrop-filter: blur(8px);
+
+  transition: all 0.25s ease;
+}
+
+.sub-card:hover {
+  background: #d4af37;
+  color: white;
+
+  transform: translateY(-3px);
+}
+
+
+
+/* ================= PRODUCTS SECTION ================= */
+
+.shop-products {
+  padding: 100px 8%;
+  max-width: 1300px;
+  margin: auto;
+}
+
+.products-header {
+  margin-bottom: 40px;
+}
+
+.shop-title {
+  font-size: 2rem;
+  font-weight: 600;
+
+  position: relative;
+  display: inline-block;
+}
+
+.shop-title::after {
+  content: "";
+
+  display: block;
+
+  width: 50%;
+  height: 3px;
+
+  background: #d4af37;
+
+  margin-top: 8px;
+}
+
+
+
+/* ================= PRODUCT GRID ================= */
+
+.product-grid {
+  display: grid;
+
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+
+  gap: 32px;
+}
+
+
+
+/* PRODUCT CARD HOVER */
+
+app-product-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+app-product-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+}
+
+
+
+/* ================= LOADING ================= */
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 80px 0;
+}
+
+
+
+/* ================= SPINNER ================= */
+
+.spinner {
+  width: 42px;
+  height: 42px;
+
+  border: 4px solid #eee;
+  border-top: 4px solid #d4af37;
+
+  border-radius: 50%;
+
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+
+/* ================= EMPTY ================= */
+
+.empty {
+  text-align: center;
+  color: #777;
+  padding: 80px 0;
+}
+
+
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 900px) {
+
+  .collections {
+    padding: 80px 6%;
+  }
+
+  .gender-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .shop-products {
+    padding: 80px 6%;
+  }
+
+}
+
+@media (max-width: 500px) {
+
+  .hero-content h1 {
+    font-size: 2rem;
+  }
+
+  .gender-card {
+    padding: 35px;
+  }
+
+}

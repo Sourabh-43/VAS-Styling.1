@@ -1,0 +1,268 @@
+/* ================= HERO ================= */
+
+.hero {
+  position: relative;
+  height: 520px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+  color: white;
+
+  background-image: url("/assets/images/hero/home-hero.jpg");
+  background-size: cover;
+  background-position: center;
+
+  overflow: hidden;
+
+  animation: heroZoom 18s ease-in-out infinite alternate;
+}
+
+/* overlay */
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0.35),
+    rgba(0,0,0,0.65)
+  );
+}
+
+/* content */
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 700px;
+  padding: 20px;
+
+  animation: heroFade 1.2s ease;
+}
+
+/* heading */
+
+.hero h1 {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.accent {
+  color: #d4af37;
+}
+
+/* paragraph */
+
+.hero p {
+  color: #ddd;
+  font-size: 1.05rem;
+  margin-bottom: 30px;
+}
+
+/* buttons */
+
+.hero-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+}
+
+.cta-primary {
+  padding: 14px 36px;
+  border-radius: 30px;
+  border: none;
+
+  background: #d4af37;
+  color: black;
+  font-weight: 600;
+
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.cta-primary:hover {
+  transform: translateY(-3px);
+  background: #f0c44d;
+}
+
+.cta-secondary {
+  padding: 14px 36px;
+  border-radius: 30px;
+
+  border: 1px solid white;
+  background: transparent;
+  color: white;
+
+  cursor: pointer;
+}
+
+.cta-secondary:hover {
+  background: white;
+  color: black;
+}
+
+/* hero animation */
+
+@keyframes heroZoom {
+  from { background-size: 100%; }
+  to { background-size: 110%; }
+}
+
+@keyframes heroFade {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ================= CATEGORIES ================= */
+
+.trending-categories {
+  padding: 80px 8%;
+
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+}
+
+.category-card {
+  height: 260px;
+  border-radius: 18px;
+
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: white;
+
+  transition: 0.4s ease;
+}
+
+.category-card span {
+  position: relative;
+  z-index: 2;
+}
+
+.category-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+}
+
+/* background images */
+
+.category-card.men {
+  background-image: url("/assets/images/categories/men.jpg");
+  background-size: cover;
+  background-position: center;
+}
+
+.category-card.women {
+  background-image: url("/assets/images/categories/women.jpg");
+  background-size: cover;
+  background-position: center;
+}
+
+.category-card.arrivals {
+  background-image: url("/assets/images/categories/new-arrivals.jpg");
+  background-size: cover;
+  background-position: center;
+}
+
+.category-card:hover {
+  transform: scale(1.04);
+}
+
+/* ================= PRODUCTS ================= */
+
+.new-arrivals {
+  padding: 100px 8%;
+  background: #f9f9f9;
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.section-header h2 {
+  font-size: 2.2rem;
+  margin-bottom: 10px;
+}
+
+.section-header p {
+  color: #777;
+}
+
+/* product grid */
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 35px;
+}
+
+/* empty state */
+
+.empty-state {
+  text-align: center;
+  padding: 60px;
+  color: #777;
+}
+
+/* ================= PAGINATION ================= */
+
+.pagination {
+  margin-top: 60px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 25px;
+}
+
+.pagination button {
+  padding: 10px 20px;
+
+  border-radius: 8px;
+  border: none;
+
+  background: #000;
+  color: white;
+
+  cursor: pointer;
+}
+
+.pagination button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 900px) {
+
+  .hero h1 {
+    font-size: 2.2rem;
+  }
+
+  .trending-categories {
+    grid-template-columns: 1fr;
+  }
+
+}

@@ -1,0 +1,92 @@
+<section class="admin-products-page">
+
+  <div class="products-header">
+    <h2>Products</h2>
+
+    <div class="header-actions">
+      <input
+        type="text"
+        placeholder="Search products..."
+        [(ngModel)]="searchTerm"
+        (input)="filterProducts()"
+        class="search-input"
+      />
+
+      <a routerLink="/admin/products/new" class="add-btn">
+        + Add Product
+      </a>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="loading">
+    Loading products...
+  </div>
+
+  <div class="table-wrapper" *ngIf="!loading">
+
+    <table class="products-table">
+
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Price</th>
+          <th>Stock</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        <tr *ngFor="let product of filteredProducts">
+
+          <td class="product-name">
+            {{ product.name }}
+          </td>
+
+          <td>
+            ₹{{ product.price }}
+          </td>
+
+          <td>
+            <span
+              class="stock-badge"
+              [class.out]="product.stock === 0"
+              [class.low]="product.stock > 0 && product.stock <= 5"
+            >
+              {{ product.stock }}
+            </span>
+          </td>
+
+          <td class="actions">
+
+            <a
+              [routerLink]="['/admin/products/edit', product._id]"
+              class="edit-btn"
+            >
+              Edit
+            </a>
+
+            <button
+              class="delete-btn"
+              (click)="deleteProduct(product._id)"
+            >
+              Delete
+            </button>
+
+          </td>
+
+        </tr>
+
+        <tr *ngIf="!filteredProducts.length">
+          <td colspan="4" class="empty">
+            No products found.
+          </td>
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+</section>

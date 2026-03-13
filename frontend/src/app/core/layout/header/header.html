@@ -1,0 +1,59 @@
+<header class="main-header">
+  <div class="header-container">
+
+    <!-- LEFT -->
+    <div class="nav-left">
+      <a routerLink="/shop" routerLinkActive="active" class="nav-link">
+        Shop
+      </a>
+    </div>
+
+    <!-- CENTER LOGO -->
+    <div class="nav-center">
+      <a routerLink="/" class="logo">
+        VAS-Styling
+      </a>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="nav-right">
+
+      <!-- NOT LOGGED IN -->
+      <ng-container *ngIf="!auth.isLoggedIn()">
+        <a routerLink="/login" class="nav-link">Login</a>
+      </ng-container>
+
+      <!-- LOGGED IN -->
+      <ng-container *ngIf="auth.isLoggedIn()">
+
+        <!-- Greeting -->
+        <span class="welcome">
+          Hi, {{ auth.getUserName() }}
+        </span>
+
+        <!-- Admin link -->
+        <a *ngIf="auth.isAdmin()"
+           routerLink="/admin"
+           class="nav-link">
+          Admin
+        </a>
+
+        <!-- Logout -->
+        <button class="logout" (click)="logout()">
+          Logout
+        </button>
+
+      </ng-container>
+
+      <!-- CART -->
+      <a routerLink="/cart" class="cart-icon">
+        🛒
+        <span *ngIf="cart.count() > 0" class="cart-badge">
+          {{ cart.count() }}
+        </span>
+      </a>
+
+    </div>
+
+  </div>
+</header>

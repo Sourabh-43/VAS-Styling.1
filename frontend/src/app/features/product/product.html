@@ -1,0 +1,94 @@
+<!-- LOADING -->
+<div *ngIf="loading" class="loading">
+  <div class="spinner"></div>
+  <p>Loading product...</p>
+</div>
+
+<!-- PRODUCT -->
+<section class="product-page" *ngIf="!loading && product">
+
+  <div class="product-container">
+
+    <!-- LEFT : IMAGE -->
+    <div class="image-section">
+
+      <div class="image-box">
+        <img
+          [src]="'http://localhost:5000' + product.image"
+          (error)="onImageError($event)"
+          [alt]="product.name"
+        />
+      </div>
+
+    </div>
+
+    <!-- RIGHT : DETAILS -->
+    <div class="details-section">
+
+      <h1 class="product-title">
+        {{ product.name }}
+      </h1>
+
+      <p class="price">
+        ₹{{ product.price }}
+      </p>
+
+      <p class="description">
+        {{ product.description }}
+      </p>
+
+      <!-- SIZE -->
+      <div class="sizes" *ngIf="product.sizes.length">
+
+        <p class="size-label">
+          Select Size
+        </p>
+
+        <div class="size-list">
+
+          <button
+            *ngFor="let size of product.sizes"
+            (click)="selectSize(size)"
+            [class.active]="selectedSize === size"
+          >
+            {{ size }}
+          </button>
+
+        </div>
+
+        <p class="size-error" *ngIf="showSizeError">
+          Please select a size
+        </p>
+
+      </div>
+
+      <!-- ADD TO CART -->
+      <button
+        class="add-cart"
+        (click)="addToCart()"
+      >
+        Add to Cart
+      </button>
+
+      <!-- PRODUCT INFO -->
+      <div class="extra-info">
+
+        <div>
+          ✔ Premium cotton fabric
+        </div>
+
+        <div>
+          ✔ Easy return within 7 days
+        </div>
+
+        <div>
+          ✔ Free shipping above ₹999
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>

@@ -1,0 +1,108 @@
+<section class="cart-container">
+
+  <h1 class="cart-title">Your Cart</h1>
+
+  <!-- EMPTY CART -->
+  <div class="empty-cart" *ngIf="cart.items().length === 0">
+    <h2>Your cart is empty</h2>
+    <a routerLink="/shop" class="shop-btn">
+      Continue Shopping
+    </a>
+  </div>
+
+  <!-- CART ITEMS -->
+  <div class="cart-layout" *ngIf="cart.items().length > 0">
+
+    <!-- LEFT SIDE : CART ITEMS -->
+    <div class="cart-list">
+
+      <div
+        class="cart-item"
+        *ngFor="let item of cart.items(); trackBy: trackById"
+      >
+
+        <!-- PRODUCT IMAGE -->
+        <img
+          class="product-image"
+          [src]="item.image ? 'http://localhost:5000' + item.image : 'assets/placeholder.png'"
+          [alt]="item.name"
+          (error)="onImageError($event)"
+        />
+
+        <!-- PRODUCT DETAILS -->
+        <div class="details">
+
+          <h3 class="name">
+            {{ item.name }}
+          </h3>
+
+          <p class="size" *ngIf="item.size">
+            Size: {{ item.size }}
+          </p>
+
+          <p class="price">
+            ₹{{ item.price }}
+          </p>
+
+          <!-- QUANTITY -->
+          <div class="quantity">
+
+            <button
+              class="qty-btn"
+              (click)="cart.decrease(item)"
+            >
+              −
+            </button>
+
+            <span class="qty-value">
+              {{ item.quantity }}
+            </span>
+
+            <button
+              class="qty-btn"
+              (click)="cart.increase(item)"
+            >
+              +
+            </button>
+
+          </div>
+
+          <button
+            class="remove"
+            (click)="cart.remove(item)"
+          >
+            Remove
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- RIGHT SIDE : SUMMARY -->
+    <div class="cart-summary">
+
+      <h2 class="summary-title">
+        Order Summary
+      </h2>
+
+      <div class="summary-row">
+        <span>Total</span>
+        <span class="total-price">
+          ₹{{ cart.total() }}
+        </span>
+      </div>
+
+      <button
+        class="checkout-btn"
+        routerLink="/checkout"
+      >
+        Proceed to Checkout
+      </button>
+
+    </div>
+
+  </div>
+
+</section>

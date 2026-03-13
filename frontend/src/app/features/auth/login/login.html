@@ -1,0 +1,73 @@
+<section class="auth-container">
+
+  <!-- LEFT SIDE PANEL -->
+  <div class="auth-left">
+
+    <div class="branding">
+      <h1>Welcome Back 👋</h1>
+      <p>
+        Access your VAS-Styling account and continue
+        exploring modern essentials crafted for you.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- RIGHT SIDE CARD -->
+  <div class="auth-right">
+
+    <div class="auth-card">
+
+      <h2>Login</h2>
+      <p class="subtitle">Enter your credentials to continue</p>
+
+      <form (ngSubmit)="login()" #loginForm="ngForm">
+
+        <!-- Email -->
+        <div class="form-group">
+          <input
+            type="email"
+            [(ngModel)]="email"
+            name="email"
+            required
+            placeholder="Email address" />
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+          <input
+            type="password"
+            [(ngModel)]="password"
+            name="password"
+            required
+            placeholder="Password" />
+        </div>
+
+        <!-- Error -->
+        <p class="error" *ngIf="error">
+          {{ error }}
+        </p>
+
+        <!-- Button -->
+        <button
+          type="submit"
+          class="auth-btn"
+          [disabled]="loading">
+
+          {{ loading ? 'Logging in...' : 'Login' }}
+
+        </button>
+
+        <!-- Switch -->
+        <p class="switch">
+          Don’t have an account?
+          <a routerLink="/register">Register</a>
+        </p>
+
+      </form>
+
+    </div>
+
+  </div>
+
+</section>

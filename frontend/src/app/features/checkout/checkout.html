@@ -1,0 +1,69 @@
+<section class="checkout-container">
+  <h1 class="page-title">Checkout</h1>
+
+  <div class="checkout-grid">
+
+    <!-- LEFT: SHIPPING -->
+    <form class="shipping-card" (ngSubmit)="placeOrder()">
+      <h2>Shipping Details</h2>
+
+      <label>
+        Full Name
+        <input
+          type="text"
+          [(ngModel)]="name"
+          name="name"
+          required
+        />
+      </label>
+
+      <label>
+        Address
+        <textarea
+          [(ngModel)]="address"
+          name="address"
+          required
+        ></textarea>
+      </label>
+
+      <label>
+        Phone
+        <input
+          type="tel"
+          [(ngModel)]="phone"
+          name="phone"
+          required
+        />
+      </label>
+
+      <button
+        type="submit"
+        class="place-order"
+        [disabled]="!cart.items().length"
+      >
+        Place Order
+      </button>
+    </form>
+
+    <!-- RIGHT: SUMMARY -->
+    <div class="summary-card">
+      <h2>Order Summary</h2>
+
+      <div class="summary-item" *ngFor="let item of cart.items()">
+        <div>
+          <strong>{{ item.name }}</strong>
+          <div class="muted">
+            Size: {{ item.size }} × {{ item.quantity }}
+          </div>
+        </div>
+        <span>₹{{ item.price * item.quantity }}</span>
+      </div>
+
+      <div class="summary-total">
+        <span>Total</span>
+        <strong>₹{{ cart.total() }}</strong>
+      </div>
+    </div>
+
+  </div>
+</section>

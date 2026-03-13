@@ -1,0 +1,145 @@
+.admin-products-page {
+  padding: 2rem;
+}
+
+/* Header */
+.products-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.header-actions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.search-input {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  min-width: 220px;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #d4af37;
+}
+
+.add-btn {
+  padding: 10px 18px;
+  background: #111;
+  color: white;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: 0.2s ease;
+}
+
+.add-btn:hover {
+  background: #d4af37;
+  color: #000;
+}
+
+/* Table */
+.table-wrapper {
+  overflow-x: auto;
+}
+
+.products-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+}
+
+.products-table th,
+.products-table td {
+  padding: 14px 18px;
+}
+
+.products-table thead {
+  background: #f3f4f6;
+}
+
+.products-table th {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.products-table tbody tr {
+  border-top: 1px solid #eee;
+  transition: 0.2s ease;
+}
+
+.products-table tbody tr:hover {
+  background: #f9fafb;
+}
+
+/* Stock badges */
+.stock-badge {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  background: #e5e7eb;
+}
+
+.stock-badge.low {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.stock-badge.out {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+/* Actions */
+.actions {
+  display: flex;
+  gap: 10px;
+}
+
+.edit-btn {
+  padding: 6px 12px;
+  background: #111;
+  color: white;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 0.85rem;
+}
+
+.edit-btn:hover {
+  background: #333;
+}
+
+.delete-btn {
+  padding: 6px 12px;
+  background: #ef4444;
+  color: white;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+.delete-btn:hover {
+  background: #dc2626;
+}
+
+.empty {
+  text-align: center;
+  padding: 2rem;
+  color: #777;
+}
+
+.loading {
+  text-align: center;
+  padding: 2rem;
+  font-weight: 500;
+}

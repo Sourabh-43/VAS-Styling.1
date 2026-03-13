@@ -1,0 +1,149 @@
+<section class="product-form-page">
+
+  <div class="form-header">
+    <h2>{{ isEdit ? 'Edit Product' : 'Add New Product' }}</h2>
+    <p>Fill in product details below</p>
+  </div>
+
+  <form (ngSubmit)="save()" #formRef="ngForm" class="product-form">
+
+    <!-- LEFT COLUMN -->
+    <div class="form-left">
+
+      <div class="form-group">
+        <label>Product Name</label>
+        <input type="text" name="name" [(ngModel)]="product.name" required />
+      </div>
+
+      <div class="form-group">
+        <label>Slug</label>
+        <input type="text" name="slug" [(ngModel)]="product.slug" required />
+      </div>
+
+      <div class="form-group">
+        <label>Price</label>
+        <input type="number" name="price" [(ngModel)]="product.price" required />
+      </div>
+
+      <div class="form-group">
+        <label>Stock Quantity</label>
+        <input
+          type="number"
+          name="stock"
+          [(ngModel)]="product.stock"
+          min="0"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label>Gender</label>
+        <select name="gender" [(ngModel)]="product.gender" required>
+          <option value="men">Men</option>
+          <option value="women">Women</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Category</label>
+        <select name="category" [(ngModel)]="product.category" required>
+          <option value="tshirts">T-Shirts</option>
+          <option value="hoodies">Hoodies</option>
+          <option value="shirts">Shirts</option>
+          <option value="jackets">Jackets</option>
+          <option value="tops">Tops</option>
+          <option value="dresses">Dresses</option>
+          <option value="jeans">Jeans</option>
+          <option value="bottoms">Bottoms</option>
+          <option value="sweaters">Sweaters</option>
+          <option value="sportswear">Sportswear</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Description</label>
+        <textarea
+          name="description"
+          rows="4"
+          [(ngModel)]="product.description">
+        </textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Available Sizes</label>
+
+        <div class="size-grid">
+          <button
+            type="button"
+            *ngFor="let size of availableSizes"
+            [class.active]="product.sizes.includes(size)"
+            (click)="toggleSize(size)">
+            {{ size }}
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+
+    <!-- RIGHT COLUMN -->
+    <div class="form-right">
+
+      <!-- MAIN IMAGE -->
+      <div class="image-upload">
+
+        <label>Main Product Image</label>
+
+        <div class="image-preview">
+          <img *ngIf="imagePreview" [src]="imagePreview" />
+          <div *ngIf="!imagePreview" class="placeholder">
+            No Image Selected
+          </div>
+        </div>
+
+        <input
+          type="file"
+          (change)="onFileSelected($event)"
+          accept="image/*"
+        />
+
+      </div>
+
+
+      <!-- HOVER IMAGE -->
+      <div class="image-upload">
+
+        <label>Hover Image (Optional)</label>
+
+        <div class="image-preview">
+          <img *ngIf="hoverPreview" [src]="hoverPreview" />
+          <div *ngIf="!hoverPreview" class="placeholder">
+            No Hover Image
+          </div>
+        </div>
+
+        <input
+          type="file"
+          (change)="onHoverSelected($event)"
+          accept="image/*"
+        />
+
+      </div>
+
+
+      <!-- SUBMIT BUTTON -->
+
+      <button
+        type="submit"
+        class="submit-btn"
+        [disabled]="formRef.invalid">
+
+        {{ isEdit ? 'Update Product' : 'Create Product' }}
+
+      </button>
+
+    </div>
+
+  </form>
+
+</section>

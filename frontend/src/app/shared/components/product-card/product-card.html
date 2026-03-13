@@ -1,0 +1,45 @@
+<div class="card">
+
+  <a class="image-wrap" [routerLink]="['/product', product._id]">
+
+    <img
+      class="main-img"
+      [src]="getImageUrl(product.image)"
+      (error)="onImageError($event)"
+      [alt]="product.name"
+    />
+
+    <img
+      class="hover-img"
+      [src]="getImageUrl(product.hoverImage || product.image)"
+      (error)="onImageError($event)"
+      [alt]="product.name"
+    />
+
+    <button
+      class="quick-cart"
+      (click)="onAddToCart.emit(product)">
+      Add to Cart
+    </button>
+
+  </a>
+
+  <div class="card-body">
+
+    <h3 class="title">{{ product.name }}</h3>
+
+    <p class="price">
+      ₹{{ product.price }}
+    </p>
+
+    <div class="actions">
+
+      <a [routerLink]="['/product', product._id]" class="view">
+        View Details
+      </a>
+
+    </div>
+
+  </div>
+
+</div>

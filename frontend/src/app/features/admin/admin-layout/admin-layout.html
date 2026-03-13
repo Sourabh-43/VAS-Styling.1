@@ -1,0 +1,59 @@
+<section class="admin-page">
+
+  <!-- HEADER -->
+  <header class="admin-header">
+
+    <div class="admin-top">
+      <div class="admin-title">
+        <h1>Admin Panel</h1>
+        <p>Manage products, orders, and store settings</p>
+      </div>
+
+      <nav class="admin-nav">
+        <a routerLink="products"
+           routerLinkActive="active"
+           class="nav-link">
+          Products
+        </a>
+
+        <a routerLink="orders"
+           routerLinkActive="active"
+           class="nav-link">
+          Orders
+        </a>
+
+        <a routerLink="/shop"
+           class="nav-link outline">
+          View Store
+        </a>
+      </nav>
+    </div>
+
+    <!-- STATS -->
+    <div class="admin-stats">
+
+      <div class="stat-card">
+        <span>Total Orders</span>
+        <strong>{{ ordersCount() }}</strong>
+      </div>
+
+      <div class="stat-card">
+        <span>Revenue</span>
+        <strong>₹{{ revenue() }}</strong>
+      </div>
+
+      <div class="stat-card">
+        <span>Pending</span>
+        <strong>{{ pending() }}</strong>
+      </div>
+
+    </div>
+
+  </header>
+
+  <!-- CONTENT -->
+  <main class="admin-content">
+    <router-outlet></router-outlet>
+  </main>
+
+</section>

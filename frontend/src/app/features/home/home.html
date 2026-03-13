@@ -1,0 +1,121 @@
+<!-- ================= HERO ================= -->
+
+<section class="hero">
+
+  <div class="hero-overlay"></div>
+
+  <div class="hero-content">
+
+    <!-- Logged In -->
+    <ng-container *ngIf="auth.isLoggedIn(); else guestBlock">
+
+      <h1>
+        Welcome back,
+        <span class="accent">
+          {{ auth.getUserName() ? auth.getUserName().split(' ')[0] : '' }}
+        </span>
+      </h1>
+
+      <p>
+        Discover the latest streetwear crafted for everyday confidence.
+      </p>
+
+      <button class="cta-primary" (click)="goToShop()">
+        Explore Collection
+      </button>
+
+    </ng-container>
+
+    <!-- Guest -->
+    <ng-template #guestBlock>
+
+      <h1>
+        Streetwear that
+        <span class="accent">defines you</span>
+      </h1>
+
+      <p>
+        Premium fashion designed for modern lifestyles.
+      </p>
+
+      <div class="hero-buttons">
+
+        <button class="cta-secondary" routerLink="/login">
+          Login
+        </button>
+
+        <button class="cta-primary" (click)="goToShop()">
+          Shop Collection
+        </button>
+
+      </div>
+
+    </ng-template>
+
+  </div>
+
+</section>
+
+
+<!-- ================= TRENDING CATEGORIES ================= -->
+
+<section class="trending-categories">
+
+  <div class="category-card men" routerLink="/shop/men">
+    <div class="category-overlay"></div>
+    <span>Men Collection</span>
+  </div>
+
+  <div class="category-card women" routerLink="/shop/women">
+    <div class="category-overlay"></div>
+    <span>Women Collection</span>
+  </div>
+
+  <div class="category-card arrivals" (click)="goToShop()">
+    <div class="category-overlay"></div>
+    <span>New Arrivals</span>
+  </div>
+
+</section>
+
+
+<!-- ================= NEW ARRIVALS ================= -->
+
+<section class="new-arrivals">
+
+  <div class="section-header">
+    <h2>New Arrivals</h2>
+    <p>Discover the latest styles in our collection</p>
+  </div>
+
+  <div class="product-grid" *ngIf="!loading && paginatedProducts.length">
+
+    <app-product-card
+      *ngFor="let product of paginatedProducts"
+      [product]="product"
+      (onAddToCart)="addToCart($event)">
+    </app-product-card>
+
+  </div>
+
+  <div class="empty-state" *ngIf="!loading && !paginatedProducts.length">
+    No products available.
+  </div>
+
+  <div class="pagination" *ngIf="totalPages > 1">
+
+    <button (click)="prevPage()" [disabled]="currentPage === 1">
+      Previous
+    </button>
+
+    <span>
+      Page {{ currentPage }} of {{ totalPages }}
+    </span>
+
+    <button (click)="nextPage()" [disabled]="currentPage === totalPages">
+      Next
+    </button>
+
+  </div>
+
+</section>

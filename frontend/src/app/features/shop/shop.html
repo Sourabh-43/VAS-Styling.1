@@ -1,0 +1,221 @@
+<!-- ================= HERO ================= -->
+<section class="shop-hero">
+  <div class="hero-overlay">
+
+    <div class="hero-content">
+
+      <span class="hero-tag">VAS MART COLLECTION</span>
+
+      <h1>
+        Discover Your
+        <span class="accent">Style</span>
+      </h1>
+
+      <p>
+        Premium fashion designed for everyday confidence.
+      </p>
+
+    </div>
+
+  </div>
+</section>
+
+
+
+<!-- ================= CATEGORY SECTION ================= -->
+<section class="collections">
+
+  <div class="section-header">
+
+    <span class="section-subtitle">Explore</span>
+
+    <h2 class="section-title">
+      Shop By Category
+    </h2>
+
+    <p class="section-desc">
+      Discover premium collections crafted for every style.
+    </p>
+
+  </div>
+
+
+  <div class="gender-grid">
+
+    <!-- MEN -->
+    <div class="gender-card men">
+
+      <div class="gender-content">
+
+        <h3>Men</h3>
+
+        <p>Modern streetwear & everyday essentials</p>
+
+        <a
+          [routerLink]="['/shop','men']"
+          routerLinkActive="active"
+          class="explore-link"
+          aria-label="Explore men's collection"
+        >
+          Explore Collection →
+        </a>
+
+      </div>
+
+      <div class="sub-grid">
+
+        <a
+          [routerLink]="['/shop','men','tshirts']"
+          routerLinkActive="active"
+          class="sub-card"
+        >
+          T-Shirts
+        </a>
+
+        <a
+          [routerLink]="['/shop','men','hoodies']"
+          routerLinkActive="active"
+          class="sub-card"
+        >
+          Hoodies
+        </a>
+
+        <a
+          [routerLink]="['/shop','men','shirts']"
+          routerLinkActive="active"
+          class="sub-card"
+        >
+          Shirts
+        </a>
+
+        <a
+          [routerLink]="['/shop','men','jackets']"
+          routerLinkActive="active"
+          class="sub-card"
+        >
+          Jackets
+        </a>
+
+      </div>
+
+    </div>
+
+
+
+    <!-- WOMEN -->
+    <div class="gender-card women">
+
+      <div class="gender-content">
+
+        <h3>Women</h3>
+
+        <p>Elegant styles for every moment</p>
+
+        <a
+          [routerLink]="['/shop','women']"
+          routerLinkActive="active"
+          class="explore-link"
+          aria-label="Explore women's collection"
+        >
+          Explore Collection →
+        </a>
+
+      </div>
+
+      <div class="sub-grid">
+
+        <a
+          [routerLink]="['/shop','women','tops']"
+          routerLinkActive="active"
+          class="sub-card"
+        >
+          Tops
+        </a>
+
+        <a
+          [routerLink]="['/shop','women','dresses']"
+          routerLinkActive="active"
+          class="sub-card"
+        >
+          Dresses
+        </a>
+
+        <a
+          [routerLink]="['/shop','women','hoodies']"
+          routerLinkActive="active"
+          class="sub-card"
+        >
+          Hoodies
+        </a>
+
+        <a
+          [routerLink]="['/shop','women','jeans']"
+          routerLinkActive="active"
+          class="sub-card"
+        >
+          Jeans
+        </a>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+
+<!-- ================= PRODUCT RESULTS ================= -->
+<section
+  id="products-section"
+  class="shop-products"
+  *ngIf="gender || category"
+>
+
+  <div class="products-header">
+
+    <h2 class="shop-title">
+
+      {{ gender | titlecase }}
+
+      <span *ngIf="category">
+        / {{ category | titlecase }}
+      </span>
+
+    </h2>
+
+  </div>
+
+
+
+  <!-- LOADING -->
+  <div *ngIf="loading" class="loading" aria-live="polite">
+    <div class="spinner"></div>
+    <p>Loading products...</p>
+  </div>
+
+
+
+  <!-- EMPTY -->
+  <div *ngIf="!loading && products.length === 0" class="empty">
+    No products found for this category.
+  </div>
+
+
+
+  <!-- PRODUCT GRID -->
+  <div
+    class="product-grid"
+    *ngIf="!loading && products.length > 0"
+  >
+
+    <app-product-card
+      *ngFor="let product of products; trackBy: trackByProduct"
+      [product]="product"
+      (onAddToCart)="addToCart($event)">
+    </app-product-card>
+
+  </div>
+
+</section>
