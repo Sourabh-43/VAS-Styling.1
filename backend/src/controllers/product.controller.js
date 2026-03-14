@@ -14,15 +14,22 @@ if (!fs.existsSync('uploads')) {
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, 'uploads/'),
   filename: (req, file, cb) => {
-    const uniqueName = Date.now() + '-' + Math.round(Math.random() * 1e9);
+    const uniqueName =
+      Date.now() + '-' + Math.round(Math.random() * 1e9);
+
     cb(null, uniqueName + path.extname(file.originalname));
   }
 });
 
 const fileFilter = (req, file, cb) => {
-  const allowedTypes = ['image/jpeg','image/png','image/webp'];
-  if (allowedTypes.includes(file.mimetype)) cb(null,true);
-  else cb(new Error('Only JPG, PNG, WEBP images allowed'),false);
+  const allowedTypes = [
+    'image/jpeg',
+    'image/png',
+    'image/webp'
+  ];
+
+  if (allowedTypes.includes(file.mimetype)) cb(null, true);
+  else cb(new Error('Only JPG, PNG, WEBP images allowed'), false);
 };
 
 const upload = multer({
@@ -38,57 +45,125 @@ exports.upload = upload.fields([
   { name: 'hoverImage', maxCount: 1 }
 ]);
 
+
+
 /* =======================
    GET ALL PRODUCTS
 ======================= */
 
-exports.getProducts = async (req,res)=>{
-  try{
+exports.getProducts = async (req, res) => {
+  try {
 
     const { gender, category } = req.query;
 
     const filter = {};
-    if(gender) filter.gender = gender;
-    if(category) filter.category = category;
+
+    if (gender) filter.gender = gender;
+    if (category) filter.category = category;
 
     const products = await Product.find(filter)
-      .sort({ createdAt:-1 });
+      .sort({ createdAt: -1 });
 
     res.json(products);
 
-  }catch(error){
-    console.error('Get products error:',error);
-    res.status(500).json({ message:'Failed to fetch products' });
+  } catch (error) {
+
+    console.error('Get products error:', error);
+
+    res.status(500).json({
+      message: 'Failed to fetch products'
+    });
+
   }
 };
+
+
+
+/* =======================
+   SEARCH PRODUCTS
+======================= */
+
+exports.searchProducts = async (req, res) => {
+
+  try {
+
+    const { q, gender, category } = req.query;
+
+    if (!q || q.trim().length < 2) {
+      return res.json([]);
+    }
+
+    const filter = {
+      $or: [
+        { name: { $regex: q, $options: 'i' } },
+        { category: { $regex: q, $options: 'i' } },
+        { gender: { $regex: q, $options: 'i' } }
+      ]
+    };
+
+    if (gender) filter.gender = gender;
+    if (category) filter.category = category;
+
+    const products = await Product.find(filter)
+      .select('name price image slug')
+      .limit(5)
+      .sort({ createdAt: -1 });
+
+    res.json(products);
+
+  } catch (error) {
+
+    console.error('Search products error:', error);
+
+    res.status(500).json({
+      message: 'Search failed'
+    });
+
+  }
+
+};
+
+
 
 /* =======================
    GET PRODUCT BY ID
 ======================= */
 
-exports.getProductById = async (req,res)=>{
-  try{
+exports.getProductById = async (req, res) => {
+
+  try {
 
     const product = await Product.findById(req.params.id);
 
-    if(!product){
-      return res.status(404).json({ message:'Product not found' });
+    if (!product) {
+      return res.status(404).json({
+        message: 'Product not found'
+      });
     }
 
     res.json(product);
 
-  }catch(error){
+  } catch (error) {
+
     console.error(error);
-    res.status(500).json({ message:'Failed to fetch product' });
+
+    res.status(500).json({
+      message: 'Failed to fetch product'
+    });
+
   }
+
 };
+
+
 
 /* =======================
    CREATE PRODUCT
 ======================= */
 
-exports.createProduct = async (req,res)=>{
-  try{
+exports.createProduct = async (req, res) => {
+
+  try {
 
     let {
       name,
@@ -101,18 +176,25 @@ exports.createProduct = async (req,res)=>{
       sizes
     } = req.body;
 
-    if(!name || price === undefined || !gender || !category){
+    if (!name || price === undefined || !gender || !category) {
       return res.status(400).json({
-        message:'Name, price, gender and category are required'
+        message:
+          'Name, price, gender and category are required'
       });
     }
 
     let generatedSlug = slug
       ? slug.toLowerCase()
-      : name.toLowerCase().trim().replace(/[^a-z0-9]+/g,'-');
+      : name
+          .toLowerCase()
+          .trim()
+          .replace(/[^a-z0-9]+/g, '-');
 
-    const existing = await Product.findOne({ slug:generatedSlug });
-    if(existing) generatedSlug += '-' + Date.now();
+    const existing = await Product.findOne({
+      slug: generatedSlug
+    });
+
+    if (existing) generatedSlug += '-' + Date.now();
 
     const parsedSizes = sizes
       ? Array.isArray(sizes)
@@ -120,11 +202,15 @@ exports.createProduct = async (req,res)=>{
         : JSON.parse(sizes)
       : [];
 
+
+
     /* MAIN IMAGE */
 
     const imagePath = req.files?.image
       ? `/uploads/${req.files.image[0].filename}`
       : null;
+
+
 
     /* HOVER IMAGE */
 
@@ -132,9 +218,11 @@ exports.createProduct = async (req,res)=>{
       ? `/uploads/${req.files.hoverImage[0].filename}`
       : null;
 
+
+
     const product = await Product.create({
       name,
-      slug:generatedSlug,
+      slug: generatedSlug,
       price,
       stock: stock || 0,
       gender,
@@ -147,103 +235,179 @@ exports.createProduct = async (req,res)=>{
 
     res.status(201).json(product);
 
-  }catch(error){
-    console.error('Create product error:',error);
+  } catch (error) {
+
+    console.error('Create product error:', error);
+
     res.status(500).json({
-      message:'Failed to create product',
-      error:error.message
+      message: 'Failed to create product',
+      error: error.message
     });
+
   }
+
 };
+
+
 
 /* =======================
    UPDATE PRODUCT
 ======================= */
 
-exports.updateProduct = async (req,res)=>{
-  try{
+exports.updateProduct = async (req, res) => {
+
+  try {
 
     const product = await Product.findById(req.params.id);
 
-    if(!product){
-      return res.status(404).json({ message:'Product not found' });
+    if (!product) {
+      return res.status(404).json({
+        message: 'Product not found'
+      });
     }
 
     let updateData = { ...req.body };
 
-    if(updateData.sizes){
+    if (updateData.sizes) {
       updateData.sizes = Array.isArray(updateData.sizes)
         ? updateData.sizes
         : JSON.parse(updateData.sizes);
     }
 
+
+
     /* UPDATE MAIN IMAGE */
 
-    if(req.files?.image){
+    if (req.files?.image) {
 
-      if(product.image){
-        const oldPath = path.join(__dirname,'..','..',product.image);
-        if(fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
+      if (product.image) {
+        const oldPath = path.join(
+          __dirname,
+          '..',
+          '..',
+          product.image
+        );
+
+        if (fs.existsSync(oldPath))
+          fs.unlinkSync(oldPath);
       }
 
-      updateData.image = `/uploads/${req.files.image[0].filename}`;
+      updateData.image =
+        `/uploads/${req.files.image[0].filename}`;
     }
+
+
 
     /* UPDATE HOVER IMAGE */
 
-    if(req.files?.hoverImage){
+    if (req.files?.hoverImage) {
 
-      if(product.hoverImage){
-        const oldPath = path.join(__dirname,'..','..',product.hoverImage);
-        if(fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
+      if (product.hoverImage) {
+
+        const oldPath = path.join(
+          __dirname,
+          '..',
+          '..',
+          product.hoverImage
+        );
+
+        if (fs.existsSync(oldPath))
+          fs.unlinkSync(oldPath);
+
       }
 
-      updateData.hoverImage = `/uploads/${req.files.hoverImage[0].filename}`;
+      updateData.hoverImage =
+        `/uploads/${req.files.hoverImage[0].filename}`;
     }
+
+
 
     const updated = await Product.findByIdAndUpdate(
       req.params.id,
       updateData,
-      { new:true, runValidators:true }
+      { new: true, runValidators: true }
     );
 
     res.json(updated);
 
-  }catch(error){
-    console.error('Update product error:',error);
-    res.status(500).json({ message:'Failed to update product' });
+  } catch (error) {
+
+    console.error('Update product error:', error);
+
+    res.status(500).json({
+      message: 'Failed to update product'
+    });
+
   }
+
 };
+
+
 
 /* =======================
    DELETE PRODUCT
 ======================= */
 
-exports.deleteProduct = async (req,res)=>{
-  try{
+exports.deleteProduct = async (req, res) => {
+
+  try {
 
     const product = await Product.findById(req.params.id);
 
-    if(!product){
-      return res.status(404).json({ message:'Product not found' });
+    if (!product) {
+      return res.status(404).json({
+        message: 'Product not found'
+      });
     }
 
-    if(product.image){
-      const imagePath = path.join(__dirname,'..','..',product.image);
-      if(fs.existsSync(imagePath)) fs.unlinkSync(imagePath);
+
+
+    if (product.image) {
+
+      const imagePath = path.join(
+        __dirname,
+        '..',
+        '..',
+        product.image
+      );
+
+      if (fs.existsSync(imagePath))
+        fs.unlinkSync(imagePath);
+
     }
 
-    if(product.hoverImage){
-      const hoverPath = path.join(__dirname,'..','..',product.hoverImage);
-      if(fs.existsSync(hoverPath)) fs.unlinkSync(hoverPath);
+
+
+    if (product.hoverImage) {
+
+      const hoverPath = path.join(
+        __dirname,
+        '..',
+        '..',
+        product.hoverImage
+      );
+
+      if (fs.existsSync(hoverPath))
+        fs.unlinkSync(hoverPath);
+
     }
+
+
 
     await product.deleteOne();
 
-    res.json({ message:'Product deleted successfully' });
+    res.json({
+      message: 'Product deleted successfully'
+    });
 
-  }catch(error){
-    console.error('Delete product error:',error);
-    res.status(500).json({ message:'Failed to delete product' });
+  } catch (error) {
+
+    console.error('Delete product error:', error);
+
+    res.status(500).json({
+      message: 'Failed to delete product'
+    });
+
   }
+
 };

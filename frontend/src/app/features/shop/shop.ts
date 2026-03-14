@@ -1,4 +1,4 @@
-import { Component, OnInit, DestroyRef, inject } from '@angular/core';
+import { Component, OnInit, DestroyRef, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { switchMap, finalize } from 'rxjs/operators';
@@ -30,7 +30,8 @@ export class ShopComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private productService: ProductService,
-    private cart: CartService
+    private cart: CartService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -51,10 +52,15 @@ export class ShopComponent implements OnInit {
           this.loading = true;
           this.errorMessage = '';
 
+          this.cdr.detectChanges(); // update UI immediately
+
           return this.productService
             .getAll(gender || undefined, category || undefined)
             .pipe(
-              finalize(() => this.loading = false)
+              finalize(() => {
+                this.loading = false;
+                this.cdr.detectChanges(); // ensure UI updates
+              })
             );
 
         })
@@ -65,6 +71,8 @@ export class ShopComponent implements OnInit {
         next: (products) => {
 
           this.products = products;
+
+          this.cdr.detectChanges(); // update product grid
 
           /* Scroll to products */
 
@@ -79,6 +87,8 @@ export class ShopComponent implements OnInit {
 
           console.error('Error loading products:', err);
           this.errorMessage = 'Failed to load products. Please try again.';
+
+          this.cdr.detectChanges();
 
         }
 

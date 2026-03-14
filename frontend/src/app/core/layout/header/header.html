@@ -1,4 +1,5 @@
 <header class="main-header">
+
   <div class="header-container">
 
     <!-- LEFT -->
@@ -8,11 +9,58 @@
       </a>
     </div>
 
-    <!-- CENTER LOGO -->
+    <!-- CENTER -->
     <div class="nav-center">
+
       <a routerLink="/" class="logo">
         VAS-Styling
       </a>
+
+      <div class="search-container">
+
+        <input
+          type="text"
+          placeholder="Search products..."
+          autocomplete="off"
+          [value]="searchQuery"
+          (input)="onSearch($event)"
+        />
+
+        <!-- SEARCH RESULTS -->
+        <div class="search-results" *ngIf="suggestions.length">
+
+          <div
+            class="search-item"
+            *ngFor="let product of suggestions; trackBy: trackProduct"
+            (click)="goToProduct(product)"
+          >
+
+            <!-- FIXED IMAGE PATH -->
+            <img
+              [src]="product.image"
+              [alt]="product.name"
+              loading="lazy"
+              onerror="this.src='assets/no-image.png'"
+            />
+
+            <div class="search-info">
+
+              <span class="name">
+                {{ product.name }}
+              </span>
+
+              <span class="price">
+                ₹{{ product.price }}
+              </span>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
     </div>
 
     <!-- RIGHT -->
@@ -26,23 +74,17 @@
       <!-- LOGGED IN -->
       <ng-container *ngIf="auth.isLoggedIn()">
 
-        <!-- Greeting -->
         <span class="welcome">
           Hi, {{ auth.getUserName() }}
         </span>
 
-        <!-- Admin link -->
-        <a *ngIf="auth.isAdmin()"
-           routerLink="/admin"
-           class="nav-link">
+        <a *ngIf="auth.isAdmin()" routerLink="/admin" class="nav-link">
           Admin
         </a>
 
-        <!-- Logout -->
-        <button class="logout" (click)="logout()">
-          Logout
-        </button>
-
+       <a class="nav-link logout-link" (click)="logout()">
+  Logout
+</a>
       </ng-container>
 
       <!-- CART -->
@@ -56,4 +98,5 @@
     </div>
 
   </div>
+
 </header>

@@ -34,4 +34,16 @@ export class ProductService {
   delete(id: string) {
     return this.http.delete(`${this.API}/admin/products/${id}`);
   }
+  searchProducts(query: string): Observable<Product[]> {
+
+  if (!query || query.trim().length === 0) {
+    return this.getAll();
+  }
+
+  return this.http.get<Product[]>(
+    `${this.API}/products/search`,
+    { params: { q: query } }
+  );
+
+}
 }

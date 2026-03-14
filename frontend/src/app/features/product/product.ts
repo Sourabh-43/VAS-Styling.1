@@ -33,37 +33,50 @@ export class ProductComponent implements OnInit {
 
   ngOnInit(): void {
 
-    const id = this.route.snapshot.paramMap.get('id');
+    this.route.paramMap.subscribe(params => {
 
-    if (!id) {
-      this.error = true;
-      this.loading = false;
-      this.cd.detectChanges();
-      return;
-    }
+      const id = params.get('id');
 
-    this.productService.getById(id)
-      .pipe(
-        finalize(() => {
-          console.log('product request finished');
-          this.loading = false;
-          this.cd.detectChanges();
-        })
-      )
-      .subscribe({
-        next: (data: Product) => {
-          console.log('received product', data);
-          this.product = data;
-          this.loading = false;
-          this.cd.detectChanges();
-        },
-        error: (err) => {
-          console.error('product request error', err);
-          this.error = true;
-          this.loading = false;
-          this.cd.detectChanges();
-        }
-      });
+      if (!id) {
+        this.error = true;
+        this.loading = false;
+        this.cd.detectChanges();
+        return;
+      }
+
+      this.loading = true;
+      this.error = false;
+
+      this.productService.getById(id)
+        .pipe(
+          finalize(() => {
+            console.log('product request finished');
+            this.loading = false;
+            this.cd.detectChanges();
+          })
+        )
+        .subscribe({
+          next: (data: Product) => {
+            console.log('received product', data);
+
+            this.product = data;
+
+            /* reset UI state when product changes */
+
+            this.selectedSize = null;
+            this.showSizeError = false;
+
+            this.cd.detectChanges();
+          },
+          error: (err) => {
+            console.error('product request error', err);
+            this.error = true;
+            this.loading = false;
+            this.cd.detectChanges();
+          }
+        });
+
+    });
 
   }
 

@@ -5,15 +5,16 @@
   <!-- EMPTY CART -->
   <div class="empty-cart" *ngIf="cart.items().length === 0">
     <h2>Your cart is empty</h2>
+
     <a routerLink="/shop" class="shop-btn">
       Continue Shopping
     </a>
   </div>
 
-  <!-- CART ITEMS -->
+  <!-- CART CONTENT -->
   <div class="cart-layout" *ngIf="cart.items().length > 0">
 
-    <!-- LEFT SIDE : CART ITEMS -->
+    <!-- LEFT : ITEMS -->
     <div class="cart-list">
 
       <div
@@ -21,7 +22,7 @@
         *ngFor="let item of cart.items(); trackBy: trackById"
       >
 
-        <!-- PRODUCT IMAGE -->
+        <!-- IMAGE -->
         <img
           class="product-image"
           [src]="item.image ? 'http://localhost:5000' + item.image : 'assets/placeholder.png'"
@@ -29,28 +30,21 @@
           (error)="onImageError($event)"
         />
 
-        <!-- PRODUCT DETAILS -->
+        <!-- DETAILS -->
         <div class="details">
 
-          <h3 class="name">
-            {{ item.name }}
-          </h3>
+          <h3 class="name">{{ item.name }}</h3>
 
           <p class="size" *ngIf="item.size">
             Size: {{ item.size }}
           </p>
 
-          <p class="price">
-            ₹{{ item.price }}
-          </p>
+          <p class="price">₹{{ item.price }}</p>
 
           <!-- QUANTITY -->
           <div class="quantity">
 
-            <button
-              class="qty-btn"
-              (click)="cart.decrease(item)"
-            >
+            <button class="qty-btn" (click)="cart.decrease(item)">
               −
             </button>
 
@@ -58,40 +52,49 @@
               {{ item.quantity }}
             </span>
 
-            <button
-              class="qty-btn"
-              (click)="cart.increase(item)"
-            >
+            <button class="qty-btn" (click)="cart.increase(item)">
               +
             </button>
 
           </div>
 
-          <button
-            class="remove"
-            (click)="cart.remove(item)"
-          >
+          <button class="remove" (click)="cart.remove(item)">
             Remove
           </button>
 
+        </div>
+
+        <!-- ITEM TOTAL -->
+        <div class="item-total">
+          ₹{{ item.price * item.quantity }}
         </div>
 
       </div>
 
     </div>
 
-    <!-- RIGHT SIDE : SUMMARY -->
-    <div class="cart-summary">
+    <!-- RIGHT : ORDER SUMMARY -->
+    <aside class="cart-summary">
 
       <h2 class="summary-title">
         Order Summary
       </h2>
 
       <div class="summary-row">
+        <span>Subtotal</span>
+        <span>₹{{ cart.total() }}</span>
+      </div>
+
+      <div class="summary-row">
+        <span>Shipping</span>
+        <span class="shipping">Free</span>
+      </div>
+
+      <div class="summary-divider"></div>
+
+      <div class="summary-total">
         <span>Total</span>
-        <span class="total-price">
-          ₹{{ cart.total() }}
-        </span>
+        <span>₹{{ cart.total() }}</span>
       </div>
 
       <button
@@ -101,7 +104,11 @@
         Proceed to Checkout
       </button>
 
-    </div>
+      <a routerLink="/shop" class="continue-shopping">
+        Continue Shopping
+      </a>
+
+    </aside>
 
   </div>
 
