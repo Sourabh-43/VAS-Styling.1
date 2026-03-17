@@ -60,11 +60,11 @@ export class AdminProductFormComponent implements OnInit {
           this.product = { ...existing };
 
           if (existing.image) {
-            this.imagePreview = 'http://localhost:5000' + existing.image;
+            this.imagePreview = 'https://vas-styling-backend.onrender.com' + existing.image;
           }
 
           if ((existing as any).hoverImage) {
-            this.hoverPreview = 'http://localhost:5000' + (existing as any).hoverImage;
+            this.hoverPreview = 'https://vas-styling-backend.onrender.com' + (existing as any).hoverImage;
           }
 
         }

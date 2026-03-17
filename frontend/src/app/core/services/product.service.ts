@@ -6,7 +6,7 @@ import { Product } from '../models/product';
 @Injectable({ providedIn: 'root' })
 export class ProductService {
 
-  private API = 'http://localhost:5000/api';
+  private API = 'https://vas-styling-backend.onrender.com/api';
 
   constructor(private http: HttpClient) {}
 

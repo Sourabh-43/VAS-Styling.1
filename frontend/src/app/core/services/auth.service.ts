@@ -15,7 +15,7 @@ export interface LoginResponse {
 @Injectable({ providedIn: 'root' })
 export class AuthService {
 
-  private API = 'http://localhost:5000/api';
+  private API = 'https://vas-styling-backend.onrender.com/api';
 
   private TOKEN_KEY = 'token';
   private USER_KEY = 'user';
