@@ -2,26 +2,50 @@ const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const connectDB = require('./config/db');
+const path = require('path');
 
 dotenv.config();
 
 const app = express();
-const path = require('path');
 
-// Serve uploaded images
-app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+/* =======================
+   DATABASE CONNECTION
+======================= */
+connectDB();
+
+/* =======================
+   CORS CONFIG (FINAL FIX)
+======================= */
+
+const allowedOrigins = [
+  'https://vas-styling-1.onrender.com'
+];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true); // allow Postman / mobile apps
+
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    } else {
+      return callback(new Error('CORS not allowed'));
+    }
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  credentials: true
+}));
+
+// Handle preflight requests
+app.options('*', cors());
 
 /* =======================
    MIDDLEWARES
 ======================= */
 
-// ✅ Enable CORS (VERY IMPORTANT)
-app.use(cors({
-  origin: 'http://localhost:4200',
-  credentials: true
-}));
-
 app.use(express.json());
+
+// Serve uploaded images
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 /* =======================
    ROUTES
@@ -41,8 +65,6 @@ app.get('/', (req, res) => {
 
 const PORT = process.env.PORT || 5000;
 
-connectDB().then(() => {
-  app.listen(PORT, () => {
-    console.log(`🚀 Server running on http://localhost:${PORT}`);
-  });
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT}`);
 });
