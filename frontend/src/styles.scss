@@ -1,27 +1,96 @@
-/* Global base styles */
+/* =========================
+   GLOBAL BASE STYLES
+========================= */
+
 body {
   margin: 0;
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   color: #111;
+  overflow-x: hidden; /* prevent horizontal scroll */
 }
 
-/* App layout wrapper */
+/* =========================
+   APP LAYOUT
+========================= */
+
 .page-wrapper {
-  min-height: calc(100vh - 160px); /* header + footer */
+  min-height: calc(100vh - 160px);
   padding: 40px 60px;
   box-sizing: border-box;
 }
 
-/* Tablet */
+/* =========================
+   CONTAINER
+========================= */
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* =========================
+   PRODUCT GRID (IMPORTANT)
+========================= */
+
+.products {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+/* =========================
+   IMAGE FIX
+========================= */
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* =========================
+   BUTTONS
+========================= */
+
+button {
+  cursor: pointer;
+  border: none;
+}
+
+/* =========================
+   TABLET
+========================= */
+
 @media (max-width: 1024px) {
   .page-wrapper {
     padding: 30px;
   }
+
+  .products {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
-/* Mobile */
+/* =========================
+   MOBILE
+========================= */
+
 @media (max-width: 600px) {
   .page-wrapper {
-    padding: 20px;
+    padding: 15px;
+  }
+
+  .products {
+    grid-template-columns: 1fr; /* single column */
+  }
+
+  h1, h2 {
+    font-size: 18px;
+  }
+
+  .navbar {
+    flex-direction: column;
+    align-items: center;
   }
 }
