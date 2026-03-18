@@ -1,22 +1,28 @@
 /* =========================
-   GLOBAL BASE STYLES
+   GLOBAL RESET
 ========================= */
 
-body {
+* {
+  box-sizing: border-box;
+}
+
+html, body {
   margin: 0;
+  padding: 0;
+  width: 100%;
+  overflow-x: hidden; /* 🔥 FIX horizontal scroll */
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   color: #111;
-  overflow-x: hidden; /* prevent horizontal scroll */
 }
 
 /* =========================
-   APP LAYOUT
+   PAGE WRAPPER
 ========================= */
 
 .page-wrapper {
   min-height: calc(100vh - 160px);
   padding: 40px 60px;
-  box-sizing: border-box;
+  max-width: 100%;
 }
 
 /* =========================
@@ -30,13 +36,48 @@ body {
 }
 
 /* =========================
-   PRODUCT GRID (IMPORTANT)
+   NAVBAR (FIXED)
+========================= */
+
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap; /* 🔥 CRITICAL */
+  padding: 10px 15px;
+}
+
+/* search bar */
+.search-bar {
+  width: 100%;
+  margin-top: 10px;
+}
+
+@media (min-width: 768px) {
+  .search-bar {
+    width: 300px;
+    margin-top: 0;
+  }
+}
+
+/* =========================
+   HERO IMAGE
+========================= */
+
+.hero img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+/* =========================
+   PRODUCT GRID
 ========================= */
 
 .products {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 15px;
 }
 
 /* =========================
@@ -50,7 +91,7 @@ img {
 }
 
 /* =========================
-   BUTTONS
+   BUTTON
 ========================= */
 
 button {
@@ -66,10 +107,6 @@ button {
   .page-wrapper {
     padding: 30px;
   }
-
-  .products {
-    grid-template-columns: repeat(2, 1fr);
-  }
 }
 
 /* =========================
@@ -82,15 +119,10 @@ button {
   }
 
   .products {
-    grid-template-columns: 1fr; /* single column */
+    grid-template-columns: 1fr;
   }
 
   h1, h2 {
     font-size: 18px;
-  }
-
-  .navbar {
-    flex-direction: column;
-    align-items: center;
   }
 }
