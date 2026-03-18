@@ -30,7 +30,7 @@ export class RegisterComponent {
     this.error = '';
     this.loading = true;
 
-    this.http.post<any>('http://localhost:5000/api/auth/register', {
+    this.http.post<any>('https://vas-styling-backend.onrender.com/api/auth/register', {
       name: this.name,
       email: this.email,
       password: this.password
