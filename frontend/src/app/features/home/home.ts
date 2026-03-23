@@ -1,6 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ChangeDetectorRef
+} from '@angular/core';
+
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
+
 import { AuthService } from '../../core/services/auth.service';
 import { ProductService } from '../../core/services/product.service';
 import { Product } from '../../core/models/product';
@@ -11,7 +17,7 @@ import { ProductCardComponent } from '../../shared/components/product-card/produ
   selector: 'app-home',
   imports: [
     CommonModule,
-     RouterModule,
+    RouterModule,
     ProductCardComponent
   ],
   templateUrl: './home.html',
@@ -29,28 +35,37 @@ export class Home implements OnInit {
   constructor(
     public auth: AuthService,
     private productService: ProductService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef   // ✅ added
   ) {}
 
   ngOnInit(): void {
+
     this.productService.getAll().subscribe({
       next: (data) => {
         this.allProducts = data;
         this.loading = false;
+
+        this.cdr.detectChanges(); // ✅ force UI update
       },
       error: (err) => {
         console.error('Error loading products:', err);
         this.loading = false;
+
+        this.cdr.detectChanges(); // ✅ ensure UI updates on error
       }
     });
+
   }
 
-  // Total number of pages
+  /* =========================
+     PAGINATION
+  ========================= */
+
   get totalPages(): number {
     return Math.ceil(this.allProducts.length / this.pageSize);
   }
 
-  // Products for current page
   get paginatedProducts(): Product[] {
     const start = (this.currentPage - 1) * this.pageSize;
     return this.allProducts.slice(start, start + this.pageSize);
@@ -59,19 +74,24 @@ export class Home implements OnInit {
   nextPage(): void {
     if (this.currentPage < this.totalPages) {
       this.currentPage++;
+      this.cdr.detectChanges(); // optional
     }
   }
 
   prevPage(): void {
     if (this.currentPage > 1) {
       this.currentPage--;
+      this.cdr.detectChanges(); // optional
     }
   }
 
-  goToShop() {
-    this.router.navigate(['/shop']);  // ✅ Reliable navigation
-  }
+  /* =========================
+     NAVIGATION
+  ========================= */
 
+  goToShop() {
+    this.router.navigate(['/shop']);
+  }
 
   addToCart(product: Product): void {
     console.log('Added to cart:', product);
