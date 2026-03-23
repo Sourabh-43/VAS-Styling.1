@@ -1,6 +1,6 @@
 <header class="main-header">
 
-  <!-- 🔥 GLOBAL TOAST -->
+  <!-- 🔥 TOAST -->
   <div class="toast" *ngIf="(cart.message$ | async) as msg">
     ✔ {{ msg }}
   </div>
@@ -9,9 +9,21 @@
 
     <!-- LEFT -->
     <div class="nav-left">
-      <a routerLink="/shop" routerLinkActive="active" class="nav-link">
+
+      <!-- 🍔 HAMBURGER (MOBILE) -->
+      <div class="hamburger"
+           [class.active]="isMobileMenuOpen"
+           (click)="toggleMobileMenu()">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+
+      <!-- DESKTOP SHOP -->
+      <a routerLink="/shop" class="nav-link desktop-only">
         Shop
       </a>
+
     </div>
 
     <!-- CENTER -->
@@ -63,36 +75,46 @@
     <!-- RIGHT -->
     <div class="nav-right">
 
-      <!-- NOT LOGGED IN -->
-      <ng-container *ngIf="!auth.isLoggedIn()">
-        <a routerLink="/login" class="nav-link">Login</a>
-      </ng-container>
+      <!-- 👤 USER (AVATAR DROPDOWN) -->
+      <div class="user-menu">
 
-      <!-- LOGGED IN -->
-      <ng-container *ngIf="auth.isLoggedIn()">
+        <div class="avatar" (click)="toggleDropdown()">
+          {{ auth.getUserName().charAt(0) || 'G' }}
+        </div>
 
-        <span class="welcome">
-          Hi, {{ auth.getUserName() }}
-        </span>
+        <div class="dropdown" *ngIf="isDropdownOpen">
 
-        <a *ngIf="auth.isAdmin()" routerLink="/admin" class="nav-link">
-          Admin
-        </a>
+          <div class="user-info">
+            {{ auth.getUserName() || 'Guest' }}
+          </div>
 
-        <a class="nav-link logout-link" (click)="logout()">
-          Logout
-        </a>
+          <!-- NOT LOGGED IN -->
+          <ng-container *ngIf="!auth.isLoggedIn()">
+            <a routerLink="/login" (click)="closeDropdown()">Login</a>
+          </ng-container>
 
-      </ng-container>
+          <!-- LOGGED IN -->
+          <ng-container *ngIf="auth.isLoggedIn()">
 
-      <!-- 🛒 CART (UPDATED) -->
-      <a
-        routerLink="/cart"
-        class="cart-icon"
-        id="cartIcon"
-      >
+            <a *ngIf="auth.isAdmin()"
+               routerLink="/admin"
+               (click)="closeDropdown()">
+              Admin Panel
+            </a>
+
+            <a (click)="logout()">
+              Logout
+            </a>
+
+          </ng-container>
+
+        </div>
+
+      </div>
+
+      <!-- 🛒 CART -->
+      <a routerLink="/cart" class="cart-icon" id="cartIcon">
         🛒
-
         <span *ngIf="cart.count() > 0" class="cart-badge">
           {{ cart.count() }}
         </span>
@@ -100,6 +122,41 @@
 
     </div>
 
+  </div>
+
+  <!-- 📱 MOBILE DRAWER -->
+  <div class="mobile-menu" [class.open]="isMobileMenuOpen">
+
+    <div class="mobile-content">
+
+      <a routerLink="/shop" (click)="closeMobileMenu()">Shop</a>
+
+      <ng-container *ngIf="!auth.isLoggedIn()">
+        <a routerLink="/login" (click)="closeMobileMenu()">Login</a>
+      </ng-container>
+
+      <ng-container *ngIf="auth.isLoggedIn()">
+
+        <a *ngIf="auth.isAdmin()"
+           routerLink="/admin"
+           (click)="closeMobileMenu()">
+          Admin Panel
+        </a>
+
+        <a (click)="logout(); closeMobileMenu()">
+          Logout
+        </a>
+
+      </ng-container>
+
+    </div>
+
+  </div>
+
+  <!-- 🌑 OVERLAY -->
+  <div class="overlay"
+       *ngIf="isMobileMenuOpen"
+       (click)="closeMobileMenu()">
   </div>
 
 </header>

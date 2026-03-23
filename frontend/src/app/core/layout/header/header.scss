@@ -1,89 +1,135 @@
-/* ========= HEADER ========= */
+/* ========= GLASS HEADER ========= */
 
 .main-header {
   position: sticky;
   top: 0;
   z-index: 1000;
-  background: linear-gradient(135deg, #0f0f0f, #1a1a1a);
+
+  backdrop-filter: blur(14px);
+  background: rgba(15, 15, 15, 0.75);
+
   border-bottom: 1px solid rgba(255,255,255,0.06);
-  backdrop-filter: blur(10px);
 }
 
-/* ========= LAYOUT ========= */
+/* ========= GRID LAYOUT ========= */
 
 .header-container {
   max-width: 1300px;
   margin: auto;
-  padding: 16px 6%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
+  padding: 14px 6%;
 
-/* ========= NAV ========= */
-
-.nav-left, .nav-right {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
-  gap: 16px;
 }
 
 /* ========= LOGO ========= */
 
 .logo {
-  font-size: 1.5rem;
+  font-size: 1.6rem;
   font-weight: 700;
-  letter-spacing: 2px;
+  letter-spacing: 3px;
+
   background: linear-gradient(90deg,#d4af37,#f5d76e,#d4af37);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+
+/* ========= CENTER ========= */
+
+.nav-center {
+  justify-self: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
 }
 
 /* ========= SEARCH ========= */
 
 .search-container {
+  width: 260px;
   position: relative;
-  max-width: 320px;
-  width: 100%;
+  transition: 0.3s ease;
 }
 
 .search-container input {
   width: 100%;
-  padding: 10px 14px 10px 34px;
+  padding: 10px 14px;
   border-radius: 30px;
+
   background: rgba(255,255,255,0.05);
   border: 1px solid rgba(255,255,255,0.08);
-  color: #fff;
+  color: white;
+
+  text-align: center;
+  transition: 0.3s ease;
 }
 
-/* ========= USER DROPDOWN ========= */
-
-.user-menu {
-  position: relative;
+/* 🔥 EXPAND ON FOCUS */
+.search-container input:focus {
+  width: 320px;
+  background: rgba(255,255,255,0.08);
+  border-color: #d4af37;
+  outline: none;
 }
 
-.user-trigger {
-  cursor: pointer;
-  color: #fff;
+/* ========= AVATAR ========= */
+
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+
+  background: linear-gradient(135deg,#d4af37,#f5d76e);
+  color: black;
+
   display: flex;
-  gap: 5px;
   align-items: center;
+  justify-content: center;
+
+  font-weight: bold;
+  cursor: pointer;
+
+  transition: 0.3s ease;
 }
+
+.avatar:hover {
+  transform: scale(1.05);
+}
+
+/* ========= DROPDOWN ========= */
 
 .dropdown {
   position: absolute;
-  top: 36px;
+  top: 50px;
   right: 0;
-  background: #111;
-  border-radius: 10px;
-  min-width: 160px;
+
+  background: rgba(20,20,20,0.95);
+  backdrop-filter: blur(10px);
+
+  border-radius: 12px;
   overflow: hidden;
+  min-width: 180px;
+
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+
+  animation: fadeIn 0.2s ease;
+}
+
+.dropdown .user-info {
+  padding: 12px;
+  font-size: 0.85rem;
+  color: #aaa;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
 }
 
 .dropdown a {
   display: block;
-  padding: 10px;
+  padding: 10px 14px;
   color: #ccc;
+  transition: 0.2s;
 }
 
 .dropdown a:hover {
@@ -94,81 +140,37 @@
 /* ========= CART ========= */
 
 .cart-icon {
-  position: relative;
-  font-size: 1.2rem;
+  font-size: 1.3rem;
+  transition: 0.2s ease;
 }
 
-.cart-badge {
-  position: absolute;
-  top: -6px;
-  right: -8px;
-  background: red;
-  font-size: 0.7rem;
-  padding: 3px 6px;
-  border-radius: 50%;
+.cart-icon:hover {
+  transform: scale(1.1);
 }
 
-/* ========= HAMBURGER ========= */
+/* ========= ANIMATIONS ========= */
 
-.hamburger {
-  display: none;
-  flex-direction: column;
-  gap: 4px;
-  cursor: pointer;
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.hamburger span {
-  width: 22px;
-  height: 2px;
-  background: white;
-}
-
-/* ========= MOBILE MENU ========= */
-
-.mobile-menu {
-  position: fixed;
-  top: 0;
-  left: -260px;
-  width: 260px;
-  height: 100%;
-  background: #0f0f0f;
-  transition: 0.3s;
-  z-index: 2000;
-}
-
-.mobile-menu.open {
-  left: 0;
-}
-
-.mobile-content {
-  padding: 80px 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.overlay {
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.6);
-  z-index: 1500;
-}
-
-/* ========= RESPONSIVE ========= */
+/* ========= MOBILE ========= */
 
 @media (max-width: 768px) {
 
-  .hamburger {
-    display: flex;
-  }
-
-  .desktop-only {
-    display: none;
-  }
-
   .search-container {
-    max-width: 100%;
+    width: 100%;
+  }
+
+  .search-container input:focus {
+    width: 100%;
   }
 
 }
