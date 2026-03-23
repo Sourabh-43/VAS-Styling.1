@@ -4,50 +4,9 @@
   position: sticky;
   top: 0;
   z-index: 1000;
-
   background: linear-gradient(135deg, #0f0f0f, #1a1a1a);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-
+  border-bottom: 1px solid rgba(255,255,255,0.06);
   backdrop-filter: blur(10px);
-}
-
-/* ========= TOAST (GLOBAL) ========= */
-
-.toast {
-  position: fixed;
-  top: 80px;
-  right: 20px;
-
-  background: #111;
-  color: #fff;
-
-  padding: 14px 20px;
-  border-radius: 10px;
-
-  font-weight: 500;
-  box-shadow: 0 10px 30px rgba(0,0,0,.4);
-
-  z-index: 9999;
-
-  animation: slideIn 0.3s ease, fadeOut 0.3s ease 1.7s;
-}
-
-@keyframes slideIn {
-  from {
-    transform: translateY(-20px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-@keyframes fadeOut {
-  to {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
 }
 
 /* ========= LAYOUT ========= */
@@ -56,76 +15,27 @@
   max-width: 1300px;
   margin: auto;
   padding: 16px 6%;
-
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
 }
 
 /* ========= NAV ========= */
 
-.nav-left,
-.nav-right {
+.nav-left, .nav-right {
   display: flex;
   align-items: center;
   gap: 16px;
 }
 
-.nav-right {
-  justify-content: flex-end;
-}
-
-/* ========= LINKS ========= */
-
-a {
-  color: #cfcfcf;
-  text-decoration: none;
-  font-size: 0.95rem;
-  font-weight: 500;
-  position: relative;
-  transition: 0.25s ease;
-}
-
-a:hover {
-  color: #fff;
-}
-
-a::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: -4px;
-  width: 0;
-  height: 1px;
-  background: #d4af37;
-  transition: width 0.25s ease;
-}
-
-a:hover::after {
-  width: 100%;
-}
-
-/* ========= CENTER ========= */
-
-.nav-center {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 20px;
-  flex: 1;
-}
-
 /* ========= LOGO ========= */
 
 .logo {
-  font-size: 1.6rem;
+  font-size: 1.5rem;
   font-weight: 700;
-  letter-spacing: 3px;
-
-  background: linear-gradient(90deg, #d4af37, #f5d76e, #d4af37);
+  letter-spacing: 2px;
+  background: linear-gradient(90deg,#d4af37,#f5d76e,#d4af37);
   -webkit-background-clip: text;
-  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
@@ -133,174 +43,132 @@ a:hover::after {
 
 .search-container {
   position: relative;
-  width: 100%;
   max-width: 320px;
-}
-
-.search-container::before {
-  content: "🔍";
-  position: absolute;
-  left: 14px;
-  top: 50%;
-  transform: translateY(-50%);
-  opacity: 0.6;
+  width: 100%;
 }
 
 .search-container input {
   width: 100%;
-  padding: 10px 16px 10px 36px;
-
+  padding: 10px 14px 10px 34px;
   border-radius: 30px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-
-  background: rgba(255, 255, 255, 0.05);
-  color: white;
-
-  transition: 0.25s ease;
-}
-
-.search-container input:focus {
-  outline: none;
-  border-color: #d4af37;
-  background: rgba(255, 255, 255, 0.08);
-}
-
-/* ========= SEARCH DROPDOWN ========= */
-
-.search-results {
-  position: absolute;
-  top: 44px;
-  left: 0;
-  width: 100%;
-
-  background: #111;
-  border-radius: 10px;
-  overflow: hidden;
-
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
-  z-index: 1000;
-}
-
-.search-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-
-  padding: 10px;
-  cursor: pointer;
-
-  transition: 0.2s ease;
-}
-
-.search-item:hover {
   background: rgba(255,255,255,0.05);
-}
-
-.search-item img {
-  width: 40px;
-  height: 40px;
-  object-fit: cover;
-  border-radius: 6px;
-}
-
-.search-info {
-  display: flex;
-  flex-direction: column;
-}
-
-.search-info .name {
-  font-size: 0.9rem;
+  border: 1px solid rgba(255,255,255,0.08);
   color: #fff;
 }
 
-.search-info .price {
-  font-size: 0.8rem;
-  color: #d4af37;
+/* ========= USER DROPDOWN ========= */
+
+.user-menu {
+  position: relative;
+}
+
+.user-trigger {
+  cursor: pointer;
+  color: #fff;
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+
+.dropdown {
+  position: absolute;
+  top: 36px;
+  right: 0;
+  background: #111;
+  border-radius: 10px;
+  min-width: 160px;
+  overflow: hidden;
+}
+
+.dropdown a {
+  display: block;
+  padding: 10px;
+  color: #ccc;
+}
+
+.dropdown a:hover {
+  background: rgba(255,255,255,0.05);
+  color: #fff;
 }
 
 /* ========= CART ========= */
 
 .cart-icon {
   position: relative;
-  font-size: 1.3rem;
-  color: white;
-  cursor: pointer;
-  transition: transform 0.2s ease;
-}
-
-.cart-icon:hover {
-  transform: scale(1.1);
+  font-size: 1.2rem;
 }
 
 .cart-badge {
   position: absolute;
   top: -6px;
-  right: -9px;
-
+  right: -8px;
   background: red;
-  color: white;
-
   font-size: 0.7rem;
   padding: 3px 6px;
   border-radius: 50%;
 }
 
-/* 🔥 CART BUMP ANIMATION */
+/* ========= HAMBURGER ========= */
 
-.cart-icon.bump {
-  animation: bump 0.3s ease;
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  cursor: pointer;
 }
 
-@keyframes bump {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.25); }
-  100% { transform: scale(1); }
+.hamburger span {
+  width: 22px;
+  height: 2px;
+  background: white;
 }
 
-/* ========= GLOBAL FIX ========= */
+/* ========= MOBILE MENU ========= */
 
-body {
-  overflow-x: hidden;
+.mobile-menu {
+  position: fixed;
+  top: 0;
+  left: -260px;
+  width: 260px;
+  height: 100%;
+  background: #0f0f0f;
+  transition: 0.3s;
+  z-index: 2000;
 }
 
-/* ========= MOBILE ========= */
+.mobile-menu.open {
+  left: 0;
+}
+
+.mobile-content {
+  padding: 80px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.overlay {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  z-index: 1500;
+}
+
+/* ========= RESPONSIVE ========= */
 
 @media (max-width: 768px) {
 
-  .header-container {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 14px;
+  .hamburger {
+    display: flex;
   }
 
-  .nav-left {
-    order: 1;
-    justify-content: center;
-  }
-
-  .logo {
-    order: 2;
-    text-align: center;
-    font-size: 1.3rem;
-  }
-
-  .nav-center {
-    order: 3;
-    flex-direction: column;
-    width: 100%;
-    gap: 10px;
+  .desktop-only {
+    display: none;
   }
 
   .search-container {
-    width: 100%;
     max-width: 100%;
   }
 
-  .nav-right {
-    order: 4;
-    width: 100%;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 10px;
-  }
 }

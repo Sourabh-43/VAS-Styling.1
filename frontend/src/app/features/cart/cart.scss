@@ -5,40 +5,29 @@
 }
 
 .cart-title {
-  font-size: 32px;
+  font-size: 34px;
   font-weight: 700;
   margin-bottom: 40px;
 }
 
-/* 🔥 TOAST */
+/* 🔥 TOAST (UPGRADED) */
 
 .toast {
   position: fixed;
   top: 100px;
   right: 20px;
 
-  background: #111;
+  background: linear-gradient(135deg, #111, #000);
   color: #fff;
 
-  padding: 14px 20px;
-  border-radius: 10px;
+  padding: 14px 22px;
+  border-radius: 12px;
 
   font-weight: 500;
-  box-shadow: 0 10px 30px rgba(0,0,0,.2);
+  box-shadow: 0 15px 40px rgba(0,0,0,.3);
 
-  animation: slideIn 0.3s ease;
+  animation: slideIn 0.35s ease;
   z-index: 2000;
-}
-
-@keyframes slideIn {
-  from {
-    transform: translateY(-20px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
 }
 
 /* LAYOUT */
@@ -47,7 +36,6 @@
   display: grid;
   grid-template-columns: 2fr 1fr;
   gap: 40px;
-  align-items: start;
 }
 
 /* LIST */
@@ -58,7 +46,7 @@
   gap: 24px;
 }
 
-/* ITEM */
+/* 🔥 ITEM (PREMIUM CARD) */
 
 .cart-item {
   display: flex;
@@ -66,17 +54,35 @@
   gap: 24px;
 
   padding: 20px;
-  border-radius: 16px;
+  border-radius: 18px;
 
-  background: #fff;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
 
-  box-shadow: 0 8px 25px rgba(0,0,0,.05);
-  transition: all 0.25s ease;
+  box-shadow: 0 10px 30px rgba(0,0,0,.06);
+  transition: all 0.3s ease;
 }
 
 .cart-item:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 12px 35px rgba(0,0,0,.08);
+  transform: translateY(-5px) scale(1.01);
+  box-shadow: 0 18px 45px rgba(0,0,0,.12);
+}
+
+/* 🔥 ENTRY ANIMATION */
+
+.fade-in {
+  animation: fadeInUp 0.4s ease;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* IMAGE */
@@ -87,6 +93,11 @@
   object-fit: cover;
   border-radius: 12px;
   background: #f5f5f5;
+  transition: transform 0.3s ease;
+}
+
+.product-image:hover {
+  transform: scale(1.05);
 }
 
 /* DETAILS */
@@ -98,39 +109,39 @@
 .name {
   font-size: 20px;
   font-weight: 600;
-  margin-bottom: 6px;
 }
 
 .size {
   font-size: 14px;
-  color: #666;
-  margin-bottom: 6px;
+  color: #777;
 }
 
 .price {
   font-size: 18px;
   font-weight: 600;
   color: #2563eb;
-  margin-bottom: 10px;
 }
 
-/* QUANTITY */
+/* 🔥 QUANTITY (MODERN BUTTONS) */
 
 .quantity {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-bottom: 10px;
+  gap: 10px;
 }
 
 .qty-btn {
   width: 34px;
   height: 34px;
-  border-radius: 8px;
-  border: 1px solid #ddd;
-  background: #fff;
+
+  border-radius: 10px;
+  border: none;
+
+  background: #f1f5f9;
   cursor: pointer;
+
   font-size: 18px;
+  font-weight: 600;
 
   transition: all 0.2s ease;
 }
@@ -138,50 +149,47 @@
 .qty-btn:hover {
   background: #111;
   color: #fff;
-  border-color: #111;
+  transform: scale(1.1);
 }
 
 .qty-value {
-  min-width: 20px;
-  text-align: center;
   font-weight: 600;
 }
 
 /* REMOVE */
 
 .remove {
+  color: #ef4444;
   background: none;
   border: none;
-  color: #ef4444;
   cursor: pointer;
   font-weight: 500;
-  transition: 0.2s;
 }
 
 .remove:hover {
-  text-decoration: underline;
-  opacity: 0.8;
+  opacity: 0.7;
 }
 
 /* TOTAL */
 
 .item-total {
   font-size: 18px;
-  font-weight: 600;
+  font-weight: 700;
 }
 
-/* SUMMARY */
+/* 🔥 SUMMARY (GLASS CARD) */
 
 .cart-summary {
   position: sticky;
   top: 120px;
 
-  background: #fff;
-  border-radius: 16px;
+  background: rgba(255,255,255,0.9);
+  backdrop-filter: blur(15px);
 
+  border-radius: 18px;
   padding: 28px;
 
-  box-shadow: 0 12px 30px rgba(0,0,0,.06);
+  box-shadow: 0 15px 40px rgba(0,0,0,.08);
 }
 
 .summary-title {
@@ -192,28 +200,36 @@
 .summary-row {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 12px;
 }
 
 .shipping {
   color: #16a34a;
 }
 
-.summary-divider {
-  height: 1px;
-  background: #eee;
-  margin: 18px 0;
-}
+/* 🔥 TOTAL POP EFFECT */
 
 .summary-total {
   display: flex;
   justify-content: space-between;
-  font-size: 20px;
+
+  font-size: 22px;
   font-weight: 700;
-  margin-bottom: 20px;
+
+  margin-top: 15px;
+
+  animation: pop 0.3s ease;
 }
 
-/* CHECKOUT */
+@keyframes pop {
+  from {
+    transform: scale(0.95);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+/* 🔥 BUTTON */
 
 .checkout-btn {
   width: 100%;
@@ -223,29 +239,17 @@
   color: #fff;
 
   border: none;
-  border-radius: 10px;
+  border-radius: 12px;
 
-  font-size: 16px;
   font-weight: 600;
-
   cursor: pointer;
-  margin-bottom: 14px;
 
   transition: all 0.25s ease;
 }
 
 .checkout-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(37,99,235,.3);
-}
-
-/* LINKS */
-
-.continue-shopping {
-  display: block;
-  text-align: center;
-  color: #2563eb;
-  font-weight: 500;
+  box-shadow: 0 12px 30px rgba(37,99,235,.35);
 }
 
 /* EMPTY */
@@ -256,7 +260,6 @@
 }
 
 .shop-btn {
-  display: inline-block;
   margin-top: 20px;
   padding: 12px 24px;
   background: #000;

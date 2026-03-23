@@ -1,7 +1,8 @@
 import {
   Component,
   OnInit,
-  OnDestroy
+  OnDestroy,
+  HostListener
 } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
@@ -28,11 +29,20 @@ import {
 })
 export class HeaderComponent implements OnInit, OnDestroy {
 
+  /* =========================
+     SEARCH
+  ========================= */
   searchQuery = '';
   suggestions: Product[] = [];
 
   private searchSubject = new Subject<string>();
   private destroy$ = new Subject<void>();
+
+  /* =========================
+     UI STATE
+  ========================= */
+  isDropdownOpen = false;
+  isMobileMenuOpen = false;
 
   constructor(
     public cart: CartService,
@@ -104,6 +114,53 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   /* =========================
+     DROPDOWN 👤
+  ========================= */
+
+  toggleDropdown() {
+    this.isDropdownOpen = !this.isDropdownOpen;
+  }
+
+  closeDropdown() {
+    this.isDropdownOpen = false;
+  }
+
+  /* =========================
+     MOBILE MENU 🍔
+  ========================= */
+
+  toggleMobileMenu() {
+    this.isMobileMenuOpen = !this.isMobileMenuOpen;
+
+    // prevent background scroll when menu open
+    document.body.style.overflow = this.isMobileMenuOpen ? 'hidden' : 'auto';
+  }
+
+  closeMobileMenu() {
+    this.isMobileMenuOpen = false;
+    document.body.style.overflow = 'auto';
+  }
+
+  /* =========================
+     CLICK OUTSIDE (PRO UX)
+  ========================= */
+
+  @HostListener('document:click', ['$event'])
+  handleClickOutside(event: Event) {
+    const target = event.target as HTMLElement;
+
+    // close dropdown if clicked outside
+    if (!target.closest('.user-menu')) {
+      this.isDropdownOpen = false;
+    }
+
+    // close mobile menu if clicking overlay area
+    if (this.isMobileMenuOpen && target.classList.contains('overlay')) {
+      this.closeMobileMenu();
+    }
+  }
+
+  /* =========================
      CART ANIMATION 🛒
   ========================= */
 
@@ -112,7 +169,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     const cartEl = document.getElementById('cartIcon');
     if (!cartEl) return;
 
-    cartEl.classList.remove('bump'); // reset
+    cartEl.classList.remove('bump');
     void cartEl.offsetWidth; // reflow trick
     cartEl.classList.add('bump');
   }
@@ -123,6 +180,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   logout() {
     this.auth.logout();
+    this.closeDropdown();
+    this.closeMobileMenu();
     this.router.navigate(['/login']);
   }
 
@@ -133,6 +192,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
+
+    // reset scroll just in case
+    document.body.style.overflow = 'auto';
   }
 
 }
