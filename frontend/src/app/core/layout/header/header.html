@@ -20,19 +20,18 @@
       </div>
 
       <!-- DESKTOP SHOP -->
-      <a routerLink="/shop" class="nav-link desktop-only">
-        Shop
+       <a routerLink="/" class="logo">
+        VAS-Styling
       </a>
+
+      
 
     </div>
 
     <!-- CENTER -->
     <div class="nav-center">
 
-      <a routerLink="/" class="logo">
-        VAS-Styling
-      </a>
-
+      
       <div class="search-container">
 
         <input
@@ -92,6 +91,11 @@
           <ng-container *ngIf="!auth.isLoggedIn()">
             <a routerLink="/login" (click)="closeDropdown()">Login</a>
           </ng-container>
+          <ng-container>
+            <a routerLink="/shop" class="nav-link desktop-only">
+        Shop
+      </a>
+      </ng-container>
 
           <!-- LOGGED IN -->
           <ng-container *ngIf="auth.isLoggedIn()">

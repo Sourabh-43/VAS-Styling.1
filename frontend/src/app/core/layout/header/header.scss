@@ -1,36 +1,80 @@
-/* ========= GLASS HEADER ========= */
+/* ========= GLOBAL RESET ========= */
+
+a {
+  color: #ccc;
+  text-decoration: none;
+  transition: 0.25s ease;
+}
+
+a:visited {
+  color: #ccc;
+}
+
+a:hover {
+  color: #fff;
+}
+
+/* ========= HEADER ========= */
 
 .main-header {
   position: sticky;
   top: 0;
   z-index: 1000;
 
+  background: rgba(15, 15, 15, 0.96);
   backdrop-filter: blur(14px);
-  background: rgba(15, 15, 15, 0.75);
 
-  border-bottom: 1px solid rgba(255,255,255,0.06);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
 }
 
-/* ========= GRID LAYOUT ========= */
+/* 🔥 PREMIUM GLOW LINE */
+.main-header::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(212,175,55,0.4),
+    transparent
+  );
+}
+
+/* ========= LAYOUT ========= */
 
 .header-container {
-  max-width: 1300px;
+  max-width: 1180px;
   margin: auto;
-  padding: 14px 6%;
+  padding: 12px 5%;
 
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
 }
 
+/* ========= NAV ========= */
+
+.nav-left,
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 18px; /* 🔥 more breathing */
+}
+
 /* ========= LOGO ========= */
 
 .logo {
-  font-size: 1.6rem;
+  font-size: 1.7rem;
   font-weight: 700;
-  letter-spacing: 3px;
+  letter-spacing: 2px;
+  white-space: nowrap;
 
   background: linear-gradient(90deg,#d4af37,#f5d76e,#d4af37);
+
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -40,6 +84,7 @@
 
 .nav-center {
   justify-self: center;
+
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -49,33 +94,86 @@
 /* ========= SEARCH ========= */
 
 .search-container {
-  width: 260px;
   position: relative;
-  transition: 0.3s ease;
+  width: 260px;
+  transition: all 0.3s ease;
 }
 
 .search-container input {
   width: 100%;
-  padding: 10px 14px;
-  border-radius: 30px;
+  padding: 10px 16px;
+  border-radius: 50px;
 
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.08);
-  color: white;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: #fff;
 
   text-align: center;
-  transition: 0.3s ease;
+  transition: all 0.3s ease;
 }
 
-/* 🔥 EXPAND ON FOCUS */
+/* 🔥 EXPAND + PREMIUM GLOW */
 .search-container input:focus {
-  width: 320px;
-  background: rgba(255,255,255,0.08);
+  width: 340px;
+  background: rgba(255,255,255,0.12);
   border-color: #d4af37;
+
+  box-shadow:
+    0 0 10px rgba(212,175,55,0.25),
+    0 0 20px rgba(212,175,55,0.15);
+
   outline: none;
 }
 
-/* ========= AVATAR ========= */
+/* ========= SEARCH DROPDOWN ========= */
+
+.search-results {
+  position: absolute;
+  top: 44px;
+  width: 100%;
+
+  background: #111;
+  border-radius: 12px;
+  overflow: hidden;
+
+  box-shadow: 0 15px 35px rgba(0,0,0,0.7);
+  z-index: 1000;
+}
+
+.search-item {
+  display: flex;
+  gap: 10px;
+  padding: 10px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.search-item:hover {
+  background: rgba(255,255,255,0.06);
+}
+
+.search-item img {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.search-info .name {
+  color: #fff;
+  font-size: 0.9rem;
+}
+
+.search-info .price {
+  color: #d4af37;
+  font-size: 0.8rem;
+}
+
+/* ========= USER ========= */
+
+.user-menu {
+  position: relative;
+}
 
 .avatar {
   width: 36px;
@@ -92,28 +190,30 @@
   font-weight: bold;
   cursor: pointer;
 
-  transition: 0.3s ease;
+  box-shadow: 0 4px 10px rgba(212,175,55,0.35);
+  transition: all 0.3s ease;
 }
 
 .avatar:hover {
-  transform: scale(1.05);
+  transform: scale(1.08);
+  box-shadow: 0 6px 18px rgba(212,175,55,0.5);
 }
 
 /* ========= DROPDOWN ========= */
 
 .dropdown {
   position: absolute;
-  top: 50px;
+  top: 52px;
   right: 0;
 
-  background: rgba(20,20,20,0.95);
-  backdrop-filter: blur(10px);
+  background: rgba(20,20,20,0.96);
+  backdrop-filter: blur(12px);
 
-  border-radius: 12px;
+  border-radius: 14px;
   overflow: hidden;
-  min-width: 180px;
+  min-width: 190px;
 
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  box-shadow: 0 15px 40px rgba(0,0,0,0.6);
 
   animation: fadeIn 0.2s ease;
 }
@@ -127,28 +227,114 @@
 
 .dropdown a {
   display: block;
-  padding: 10px 14px;
+  padding: 11px 14px;
   color: #ccc;
-  transition: 0.2s;
 }
 
 .dropdown a:hover {
-  background: rgba(255,255,255,0.05);
+  background: rgba(255,255,255,0.06);
   color: #fff;
 }
 
 /* ========= CART ========= */
 
 .cart-icon {
+  position: relative;
   font-size: 1.3rem;
+  color: #fff;
   transition: 0.2s ease;
 }
 
 .cart-icon:hover {
-  transform: scale(1.1);
+  transform: scale(1.12);
 }
 
-/* ========= ANIMATIONS ========= */
+.cart-badge {
+  position: absolute;
+  top: -6px;
+  right: -8px;
+
+  background: red;
+  color: white;
+
+  font-size: 0.7rem;
+  padding: 3px 6px;
+  border-radius: 50%;
+}
+
+/* ========= HAMBURGER ========= */
+
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  cursor: pointer;
+}
+
+.hamburger span {
+  width: 22px;
+  height: 2px;
+  background: white;
+  transition: 0.3s ease;
+}
+
+/* ANIMATION */
+.hamburger.active span:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+.hamburger.active span:nth-child(2) {
+  opacity: 0;
+}
+.hamburger.active span:nth-child(3) {
+  transform: rotate(-45deg) translate(5px, -5px);
+}
+
+/* ========= MOBILE MENU ========= */
+
+.mobile-menu {
+  position: fixed;
+  top: 0;
+  left: -260px;
+  width: 260px;
+  height: 100%;
+
+  background: #0f0f0f;
+  transition: 0.3s ease;
+  z-index: 2000;
+
+  box-shadow: 5px 0 25px rgba(0,0,0,0.6);
+}
+
+.mobile-menu.open {
+  left: 0;
+}
+
+.mobile-content {
+  padding: 80px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.mobile-content a {
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+/* ========= OVERLAY ========= */
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  background: rgba(0,0,0,0.65);
+  z-index: 1500;
+}
+
+/* ========= ANIMATION ========= */
 
 @keyframes fadeIn {
   from {
@@ -161,9 +347,21 @@
   }
 }
 
-/* ========= MOBILE ========= */
+/* ========= RESPONSIVE ========= */
 
 @media (max-width: 768px) {
+
+  .hamburger {
+    display: flex;
+  }
+
+  .desktop-only {
+    display: none;
+  }
+
+  .header-container {
+    grid-template-columns: auto 1fr auto;
+  }
 
   .search-container {
     width: 100%;
@@ -172,5 +370,4 @@
   .search-container input:focus {
     width: 100%;
   }
-
 }
