@@ -11,6 +11,45 @@
   backdrop-filter: blur(10px);
 }
 
+/* ========= TOAST (GLOBAL) ========= */
+
+.toast {
+  position: fixed;
+  top: 80px;
+  right: 20px;
+
+  background: #111;
+  color: #fff;
+
+  padding: 14px 20px;
+  border-radius: 10px;
+
+  font-weight: 500;
+  box-shadow: 0 10px 30px rgba(0,0,0,.4);
+
+  z-index: 9999;
+
+  animation: slideIn 0.3s ease, fadeOut 0.3s ease 1.7s;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  to {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
 /* ========= LAYOUT ========= */
 
 .header-container {
@@ -86,6 +125,7 @@ a:hover::after {
 
   background: linear-gradient(90deg, #d4af37, #f5d76e, #d4af37);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
@@ -115,6 +155,14 @@ a:hover::after {
 
   background: rgba(255, 255, 255, 0.05);
   color: white;
+
+  transition: 0.25s ease;
+}
+
+.search-container input:focus {
+  outline: none;
+  border-color: #d4af37;
+  background: rgba(255, 255, 255, 0.08);
 }
 
 /* ========= SEARCH DROPDOWN ========= */
@@ -133,12 +181,55 @@ a:hover::after {
   z-index: 1000;
 }
 
+.search-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 10px;
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.search-item:hover {
+  background: rgba(255,255,255,0.05);
+}
+
+.search-item img {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.search-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.search-info .name {
+  font-size: 0.9rem;
+  color: #fff;
+}
+
+.search-info .price {
+  font-size: 0.8rem;
+  color: #d4af37;
+}
+
 /* ========= CART ========= */
 
 .cart-icon {
   position: relative;
   font-size: 1.3rem;
   color: white;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.cart-icon:hover {
+  transform: scale(1.1);
 }
 
 .cart-badge {
@@ -154,13 +245,25 @@ a:hover::after {
   border-radius: 50%;
 }
 
+/* 🔥 CART BUMP ANIMATION */
+
+.cart-icon.bump {
+  animation: bump 0.3s ease;
+}
+
+@keyframes bump {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.25); }
+  100% { transform: scale(1); }
+}
+
 /* ========= GLOBAL FIX ========= */
 
 body {
   overflow-x: hidden;
 }
 
-/* ========= MOBILE (REAL FIX) ========= */
+/* ========= MOBILE ========= */
 
 @media (max-width: 768px) {
 
@@ -170,20 +273,17 @@ body {
     gap: 14px;
   }
 
-  /* TOP */
   .nav-left {
     order: 1;
     justify-content: center;
   }
 
-  /* LOGO */
   .logo {
     order: 2;
     text-align: center;
     font-size: 1.3rem;
   }
 
-  /* SEARCH */
   .nav-center {
     order: 3;
     flex-direction: column;
@@ -196,7 +296,6 @@ body {
     max-width: 100%;
   }
 
-  /* BOTTOM ACTIONS */
   .nav-right {
     order: 4;
     width: 100%;

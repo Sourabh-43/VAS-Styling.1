@@ -1,13 +1,23 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy
+} from '@angular/core';
+
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
+
 import { CartService } from '../../services/cart.service';
 import { AuthService } from '../../services/auth.service';
 import { ProductService } from '../../services/product.service';
 import { Product } from '../../models/product';
 
-import { Subject } from 'rxjs';
-import { debounceTime, switchMap, distinctUntilChanged } from 'rxjs/operators';
+import { Subject, takeUntil } from 'rxjs';
+import {
+  debounceTime,
+  switchMap,
+  distinctUntilChanged
+} from 'rxjs/operators';
 
 @Component({
   selector: 'app-header',
@@ -16,43 +26,57 @@ import { debounceTime, switchMap, distinctUntilChanged } from 'rxjs/operators';
   templateUrl: './header.html',
   styleUrls: ['./header.scss']
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit, OnDestroy {
 
   searchQuery = '';
   suggestions: Product[] = [];
 
   private searchSubject = new Subject<string>();
+  private destroy$ = new Subject<void>();
 
   constructor(
     public cart: CartService,
     public auth: AuthService,
     private router: Router,
-    private productService: ProductService,
-    private cdr: ChangeDetectorRef
+    private productService: ProductService
   ) {}
+
+  /* =========================
+     INIT
+  ========================= */
 
   ngOnInit() {
 
     this.searchSubject.pipe(
       debounceTime(300),
       distinctUntilChanged(),
-      switchMap(query => this.productService.searchProducts(query))
+      switchMap(query =>
+        this.productService.searchProducts(query)
+      ),
+      takeUntil(this.destroy$)
     ).subscribe({
 
       next: (products) => {
         this.suggestions = products.slice(0, 5);
-        this.cdr.detectChanges();
       },
 
       error: (err) => {
         console.error('Search error:', err);
         this.suggestions = [];
-        this.cdr.detectChanges();
       }
 
     });
 
+    // 🔥 Cart bump animation trigger
+    this.cart.message$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => this.bumpCart());
+
   }
+
+  /* =========================
+     SEARCH
+  ========================= */
 
   onSearch(event: Event) {
 
@@ -79,9 +103,36 @@ export class HeaderComponent implements OnInit {
     return product._id ?? index;
   }
 
+  /* =========================
+     CART ANIMATION 🛒
+  ========================= */
+
+  private bumpCart() {
+
+    const cartEl = document.getElementById('cartIcon');
+    if (!cartEl) return;
+
+    cartEl.classList.remove('bump'); // reset
+    void cartEl.offsetWidth; // reflow trick
+    cartEl.classList.add('bump');
+  }
+
+  /* =========================
+     AUTH
+  ========================= */
+
   logout() {
     this.auth.logout();
     this.router.navigate(['/login']);
+  }
+
+  /* =========================
+     CLEANUP
+  ========================= */
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
 }

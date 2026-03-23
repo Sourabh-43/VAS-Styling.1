@@ -14,7 +14,8 @@
 
       <div class="image-box">
         <img
-          [src]="'https://vas-styling-backend.onrender.com' + product.image"
+          class="product-image"
+          [src]="product.image ? 'https://vas-styling-backend.onrender.com' + product.image : 'assets/placeholder.png'"
           (error)="onImageError($event)"
           [alt]="product.name"
         />
@@ -65,7 +66,7 @@
       <!-- ADD TO CART -->
       <button
         class="add-cart"
-        (click)="addToCart()"
+        (click)="addToCart($event)"
       >
         Add to Cart
       </button>
@@ -73,17 +74,9 @@
       <!-- PRODUCT INFO -->
       <div class="extra-info">
 
-        <div>
-          ✔ Premium cotton fabric
-        </div>
-
-        <div>
-          ✔ Easy return within 7 days
-        </div>
-
-        <div>
-          ✔ Free shipping above ₹999
-        </div>
+        <div>✔ Premium cotton fabric</div>
+        <div>✔ Easy return within 7 days</div>
+        <div>✔ Free shipping above ₹999</div>
 
       </div>
 

@@ -1,5 +1,10 @@
 <header class="main-header">
 
+  <!-- 🔥 GLOBAL TOAST -->
+  <div class="toast" *ngIf="(cart.message$ | async) as msg">
+    ✔ {{ msg }}
+  </div>
+
   <div class="header-container">
 
     <!-- LEFT -->
@@ -35,7 +40,6 @@
             (click)="goToProduct(product)"
           >
 
-            <!-- FIXED IMAGE PATH -->
             <img
               [src]="product.image"
               [alt]="product.name"
@@ -44,15 +48,8 @@
             />
 
             <div class="search-info">
-
-              <span class="name">
-                {{ product.name }}
-              </span>
-
-              <span class="price">
-                ₹{{ product.price }}
-              </span>
-
+              <span class="name">{{ product.name }}</span>
+              <span class="price">₹{{ product.price }}</span>
             </div>
 
           </div>
@@ -82,14 +79,20 @@
           Admin
         </a>
 
-       <a class="nav-link logout-link" (click)="logout()">
-  Logout
-</a>
+        <a class="nav-link logout-link" (click)="logout()">
+          Logout
+        </a>
+
       </ng-container>
 
-      <!-- CART -->
-      <a routerLink="/cart" class="cart-icon">
+      <!-- 🛒 CART (UPDATED) -->
+      <a
+        routerLink="/cart"
+        class="cart-icon"
+        id="cartIcon"
+      >
         🛒
+
         <span *ngIf="cart.count() > 0" class="cart-badge">
           {{ cart.count() }}
         </span>
