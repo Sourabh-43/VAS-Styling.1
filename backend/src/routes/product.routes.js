@@ -11,7 +11,7 @@ router.get('/', controller.getProducts);
 /* SEARCH PRODUCTS */
 router.get('/search', controller.searchProducts);
 
-/* GET PRODUCT BY ID */
-router.get('/id/:id', controller.getProductById);
+/* GET PRODUCT BY ID ✅ FIXED */
+router.get('/:id', controller.getProductById);
 
 module.exports = router;

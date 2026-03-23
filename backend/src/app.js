@@ -17,26 +17,11 @@ connectDB();
    CORS CONFIG (FINAL FIX)
 ======================= */
 
-const allowedOrigins = [
-  'https://vas-styling-1.onrender.com'
-];
-
 app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin) return callback(null, true); // allow Postman / mobile apps
-
-    if (allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    } else {
-      return callback(new Error('CORS not allowed'));
-    }
-  },
+  origin: 'https://vas-styling-1.onrender.com',
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   credentials: true
 }));
-
-// Handle preflight requests
-app.use(cors());
 
 /* =======================
    MIDDLEWARES
