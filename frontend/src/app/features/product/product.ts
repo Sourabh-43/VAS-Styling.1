@@ -1,7 +1,8 @@
 import {
   Component,
   OnInit,
-  OnDestroy
+  OnDestroy,
+  ChangeDetectorRef
 } from '@angular/core';
 
 import { ActivatedRoute } from '@angular/router';
@@ -36,7 +37,8 @@ export class ProductComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private productService: ProductService,
-    private cart: CartService
+    private cart: CartService,
+    private cdr: ChangeDetectorRef   // ✅ added
   ) {}
 
   /* =========================
@@ -54,16 +56,19 @@ export class ProductComponent implements OnInit, OnDestroy {
         if (!id) {
           this.error = true;
           this.loading = false;
+          this.cdr.detectChanges(); // ✅ force UI
           return;
         }
 
         this.loading = true;
         this.error = false;
+        this.cdr.detectChanges(); // ✅ show loader immediately
 
         this.productService.getById(id)
           .pipe(
             finalize(() => {
               this.loading = false;
+              this.cdr.detectChanges(); // ✅ ensure loader stops
             }),
             takeUntil(this.destroy$)
           )
@@ -72,14 +77,18 @@ export class ProductComponent implements OnInit, OnDestroy {
 
               this.product = data;
 
-              // reset UI state
               this.selectedSize = null;
               this.showSizeError = false;
+
+              this.cdr.detectChanges(); // ✅ update UI with product
             },
             error: (err) => {
               console.error('product request error', err);
+
               this.error = true;
               this.loading = false;
+
+              this.cdr.detectChanges(); // ✅ show error state
             }
           });
 
@@ -94,16 +103,19 @@ export class ProductComponent implements OnInit, OnDestroy {
   selectSize(size: string) {
     this.selectedSize = size;
     this.showSizeError = false;
+
+    this.cdr.detectChanges(); // optional
   }
 
   /* =========================
-     ADD TO CART + ANIMATION
+     ADD TO CART
   ========================= */
 
   addToCart(event: MouseEvent) {
 
     if (!this.selectedSize || !this.product) {
       this.showSizeError = true;
+      this.cdr.detectChanges(); // ✅ show error instantly
       return;
     }
 
@@ -112,7 +124,7 @@ export class ProductComponent implements OnInit, OnDestroy {
   }
 
   /* =========================
-     FLY TO CART ANIMATION ✨
+     ANIMATION
   ========================= */
 
   private animateToCart() {
@@ -157,6 +169,8 @@ export class ProductComponent implements OnInit, OnDestroy {
   onImageError(event: Event) {
     const img = event.target as HTMLImageElement;
     img.src = 'assets/placeholder.png';
+
+    this.cdr.detectChanges(); // ✅ update image immediately
   }
 
   /* =========================

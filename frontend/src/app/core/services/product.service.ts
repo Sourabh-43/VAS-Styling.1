@@ -19,8 +19,10 @@ export class ProductService {
     return this.http.get<Product[]>(`${this.API}/products`, { params });
   }
 
- getById(id: string) {
-  return this.http.get<Product>(`${this.API}/products/id/${id}`);
+getById(id: string) {
+  return this.http.get<Product>(
+    `https://vas-styling-backend.onrender.com/api/products/${id}`
+  );
 }
 
   create(formData: FormData) {
