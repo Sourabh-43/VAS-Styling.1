@@ -1,5 +1,10 @@
 <section class="cart-container">
 
+  <!-- 🔥 TOAST -->
+  <div class="toast" *ngIf="(cart.message$ | async) as msg">
+    {{ msg }}
+  </div>
+
   <h1 class="cart-title">Your Cart</h1>
 
   <!-- EMPTY CART -->
@@ -14,7 +19,7 @@
   <!-- CART CONTENT -->
   <div class="cart-layout" *ngIf="cart.items().length > 0">
 
-    <!-- LEFT : ITEMS -->
+    <!-- LEFT -->
     <div class="cart-list">
 
       <div
@@ -22,7 +27,6 @@
         *ngFor="let item of cart.items(); trackBy: trackById"
       >
 
-        <!-- IMAGE -->
         <img
           class="product-image"
           [src]="item.image ? 'https://vas-styling-backend.onrender.com' + item.image : 'assets/placeholder.png'"
@@ -30,9 +34,7 @@
           (error)="onImageError($event)"
         />
 
-        <!-- DETAILS -->
         <div class="details">
-
           <h3 class="name">{{ item.name }}</h3>
 
           <p class="size" *ngIf="item.size">
@@ -41,30 +43,17 @@
 
           <p class="price">₹{{ item.price }}</p>
 
-          <!-- QUANTITY -->
           <div class="quantity">
-
-            <button class="qty-btn" (click)="cart.decrease(item)">
-              −
-            </button>
-
-            <span class="qty-value">
-              {{ item.quantity }}
-            </span>
-
-            <button class="qty-btn" (click)="cart.increase(item)">
-              +
-            </button>
-
+            <button class="qty-btn" (click)="cart.decrease(item)">−</button>
+            <span class="qty-value">{{ item.quantity }}</span>
+            <button class="qty-btn" (click)="cart.increase(item)">+</button>
           </div>
 
           <button class="remove" (click)="cart.remove(item)">
             Remove
           </button>
-
         </div>
 
-        <!-- ITEM TOTAL -->
         <div class="item-total">
           ₹{{ item.price * item.quantity }}
         </div>
@@ -73,12 +62,10 @@
 
     </div>
 
-    <!-- RIGHT : ORDER SUMMARY -->
+    <!-- RIGHT -->
     <aside class="cart-summary">
 
-      <h2 class="summary-title">
-        Order Summary
-      </h2>
+      <h2 class="summary-title">Order Summary</h2>
 
       <div class="summary-row">
         <span>Subtotal</span>
@@ -97,10 +84,7 @@
         <span>₹{{ cart.total() }}</span>
       </div>
 
-      <button
-        class="checkout-btn"
-        routerLink="/checkout"
-      >
+      <button class="checkout-btn" routerLink="/checkout">
         Proceed to Checkout
       </button>
 

@@ -14,19 +14,12 @@ export class CartComponent {
 
   constructor(public cart: CartService) {}
 
-  /**
-   * Fix broken product images
-   */
   onImageError(event: Event) {
     const img = event.target as HTMLImageElement;
     img.src = 'assets/placeholder.png';
   }
 
-  /**
-   * Improve Angular rendering performance
-   */
   trackById(index: number, item: any) {
     return item.id + item.size;
   }
-
 }
