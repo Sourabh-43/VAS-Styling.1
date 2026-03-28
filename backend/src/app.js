@@ -18,9 +18,9 @@ connectDB();
 ======================= */
 
 app.use(cors({
-  origin: 'https://vas-styling-1.onrender.com',
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  credentials: true
+  origin: true,
+  credentials: true,
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
 /* =======================
