@@ -15,7 +15,7 @@ const app = express();
 connectDB();
 
 /* =======================
-   CORS CONFIG (FINAL)
+   CORS CONFIG
 ======================= */
 
 app.use(cors({
@@ -25,8 +25,8 @@ app.use(cors({
   allowedHeaders: ['Content-Type','Authorization']
 }));
 
-// 🔥 Important for file upload requests
-app.options('*', cors());
+// ✅ Fix for Node 22 / Express 5
+app.options('/*', cors());
 
 
 /* =======================
@@ -35,18 +35,17 @@ app.options('*', cors());
 
 app.use(express.json());
 
+
 /* =======================
    UPLOADS FOLDER
 ======================= */
 
-// Ensure uploads folder exists (important for Render)
 const uploadDir = path.join(__dirname, 'uploads');
 
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir);
 }
 
-// Serve uploaded images
 app.use('/uploads', express.static(uploadDir));
 
 
