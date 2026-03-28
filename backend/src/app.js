@@ -12,6 +12,7 @@ const app = express();
 /* =======================
    DATABASE CONNECTION
 ======================= */
+
 connectDB();
 
 /* =======================
@@ -21,20 +22,15 @@ connectDB();
 app.use(cors({
   origin: true,
   credentials: true,
-  methods: ['GET','POST','PUT','DELETE','OPTIONS'],
-  allowedHeaders: ['Content-Type','Authorization']
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
-
-// ✅ Fix for Node 22 / Express 5
-app.options('/*', cors());
-
 
 /* =======================
    MIDDLEWARES
 ======================= */
 
 app.use(express.json());
-
 
 /* =======================
    UPLOADS FOLDER
@@ -48,7 +44,6 @@ if (!fs.existsSync(uploadDir)) {
 
 app.use('/uploads', express.static(uploadDir));
 
-
 /* =======================
    ROUTES
 ======================= */
@@ -57,7 +52,6 @@ app.use('/api/auth', require('./routes/auth.routes'));
 app.use('/api/products', require('./routes/product.routes'));
 app.use('/api/admin', require('./routes/admin.routes'));
 
-
 /* =======================
    ROOT
 ======================= */
@@ -65,7 +59,6 @@ app.use('/api/admin', require('./routes/admin.routes'));
 app.get('/', (req, res) => {
   res.send('VASmart Backend API running');
 });
-
 
 /* =======================
    SERVER
