@@ -7,7 +7,9 @@ export const appConfig = {
   providers: [
     provideRouter(routes),
     provideHttpClient(
-      withInterceptors([tokenInterceptor]) // ✅ FIXED
+      withInterceptors([
+        tokenInterceptor
+      ])
     )
   ]
 };

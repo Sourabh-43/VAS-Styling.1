@@ -4,13 +4,12 @@ import { AuthService } from '../services/auth.service';
 
 export const tokenInterceptor: HttpInterceptorFn = (req, next) => {
 
-  // 🔥 Skip auth for public APIs
-  if (req.url.includes('/api/products') && req.method === 'GET') {
-    return next(req);
-  }
-
   const auth = inject(AuthService);
   const token = auth.getToken();
+
+  console.log("Interceptor running");
+  console.log("Token:", token);
+  console.log("URL:", req.url);
 
   if (token) {
     req = req.clone({
