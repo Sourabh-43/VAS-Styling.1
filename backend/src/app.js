@@ -3,6 +3,7 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 const connectDB = require('./config/db');
 const path = require('path');
+const fs = require('fs');
 
 dotenv.config();
 
@@ -14,14 +15,19 @@ const app = express();
 connectDB();
 
 /* =======================
-   CORS CONFIG (FINAL FIX)
+   CORS CONFIG (FINAL)
 ======================= */
 
 app.use(cors({
   origin: true,
   credentials: true,
-  allowedHeaders: ['Content-Type', 'Authorization']
+  methods: ['GET','POST','PUT','DELETE','OPTIONS'],
+  allowedHeaders: ['Content-Type','Authorization']
 }));
+
+// 🔥 Important for file upload requests
+app.options('*', cors());
+
 
 /* =======================
    MIDDLEWARES
@@ -29,8 +35,20 @@ app.use(cors({
 
 app.use(express.json());
 
+/* =======================
+   UPLOADS FOLDER
+======================= */
+
+// Ensure uploads folder exists (important for Render)
+const uploadDir = path.join(__dirname, 'uploads');
+
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir);
+}
+
 // Serve uploaded images
-app.use('/uploads', express.static('uploads'));
+app.use('/uploads', express.static(uploadDir));
+
 
 /* =======================
    ROUTES
@@ -40,9 +58,15 @@ app.use('/api/auth', require('./routes/auth.routes'));
 app.use('/api/products', require('./routes/product.routes'));
 app.use('/api/admin', require('./routes/admin.routes'));
 
+
+/* =======================
+   ROOT
+======================= */
+
 app.get('/', (req, res) => {
   res.send('VASmart Backend API running');
 });
+
 
 /* =======================
    SERVER
