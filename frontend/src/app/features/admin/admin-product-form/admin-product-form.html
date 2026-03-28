@@ -12,17 +12,32 @@
 
       <div class="form-group">
         <label>Product Name</label>
-        <input type="text" name="name" [(ngModel)]="product.name" required />
+        <input
+          type="text"
+          name="name"
+          [(ngModel)]="product.name"
+          required
+        />
       </div>
 
       <div class="form-group">
         <label>Slug</label>
-        <input type="text" name="slug" [(ngModel)]="product.slug" required />
+        <input
+          type="text"
+          name="slug"
+          [(ngModel)]="product.slug"
+          required
+        />
       </div>
 
       <div class="form-group">
         <label>Price</label>
-        <input type="number" name="price" [(ngModel)]="product.price" required />
+        <input
+          type="number"
+          name="price"
+          [(ngModel)]="product.price"
+          required
+        />
       </div>
 
       <div class="form-group">
@@ -38,7 +53,11 @@
 
       <div class="form-group">
         <label>Gender</label>
-        <select name="gender" [(ngModel)]="product.gender" required>
+        <select
+          name="gender"
+          [(ngModel)]="product.gender"
+          required
+        >
           <option value="men">Men</option>
           <option value="women">Women</option>
         </select>
@@ -46,7 +65,11 @@
 
       <div class="form-group">
         <label>Category</label>
-        <select name="category" [(ngModel)]="product.category" required>
+        <select
+          name="category"
+          [(ngModel)]="product.category"
+          required
+        >
           <option value="tshirts">T-Shirts</option>
           <option value="hoodies">Hoodies</option>
           <option value="shirts">Shirts</option>
@@ -81,6 +104,7 @@
             {{ size }}
           </button>
         </div>
+
       </div>
 
     </div>
@@ -103,6 +127,7 @@
 
         <input
           type="file"
+          name="image"
           (change)="onFileSelected($event)"
           accept="image/*"
         />
@@ -124,6 +149,7 @@
 
         <input
           type="file"
+          name="hoverImage"
           (change)="onHoverSelected($event)"
           accept="image/*"
         />
@@ -135,8 +161,7 @@
 
       <button
         type="submit"
-        class="submit-btn"
-        [disabled]="formRef.invalid">
+        class="submit-btn">
 
         {{ isEdit ? 'Update Product' : 'Create Product' }}
 
