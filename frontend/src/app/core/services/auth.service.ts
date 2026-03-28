@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
+import { CartService } from './cart.service';
 
 export interface LoginResponse {
   token: string;
@@ -20,7 +21,10 @@ export class AuthService {
   private TOKEN_KEY = 'token';
   private USER_KEY = 'user';
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private cartService: CartService
+  ) {}
 
   /* ==============================
      LOGIN
@@ -29,12 +33,15 @@ export class AuthService {
     return this.http
       .post<LoginResponse>(`${this.API}/auth/login`, { email, password })
       .pipe(
-        tap(res => this.saveAuthData(res.token, res.user))
+        tap(res => {
+          this.saveAuthData(res.token, res.user);
+          this.cartService.reloadCart();   // 🔥 reload cart after login
+        })
       );
   }
 
   /* ==============================
-     REGISTER (Optional but Recommended)
+     REGISTER
   ============================== */
   register(name: string, email: string, password: string) {
     return this.http.post(`${this.API}/auth/register`, {
@@ -69,9 +76,9 @@ export class AuthService {
   }
 
   getUserName(): string {
-  const user = localStorage.getItem('user');
-  return user ? JSON.parse(user).name : '';
-}
+    const user = this.getUser();
+    return user?.name || '';
+  }
 
   getUserRole(): 'admin' | 'user' | null {
     return this.getUser()?.role || null;
@@ -80,9 +87,9 @@ export class AuthService {
   /* ==============================
      AUTH CHECKS
   ============================== */
-isLoggedIn(): boolean {
-  return !!localStorage.getItem('token');
-}
+  isLoggedIn(): boolean {
+    return !!localStorage.getItem(this.TOKEN_KEY);
+  }
 
   isAdmin(): boolean {
     return this.getUserRole() === 'admin';
@@ -94,5 +101,7 @@ isLoggedIn(): boolean {
   logout(): void {
     localStorage.removeItem(this.TOKEN_KEY);
     localStorage.removeItem(this.USER_KEY);
+
+    this.cartService.reloadCart();   // 🔥 reload cart after logout
   }
 }

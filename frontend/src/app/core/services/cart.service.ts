@@ -12,7 +12,6 @@ export class CartService {
 
   private _items = signal<CartItem[]>(this.loadCart());
 
-  // 🔥 Toast message
   private _message = new BehaviorSubject<string | null>(null);
   message$ = this._message.asObservable();
 
@@ -66,12 +65,11 @@ export class CartService {
       return [...items, newItem];
     });
 
-    // ✅ Clean messaging
-    if (isNewItem) {
-      this.showMessage(`${product.name} added to cart`);
-    } else {
-      this.showMessage(`Increased quantity of ${product.name}`);
-    }
+    this.showMessage(
+      isNewItem
+        ? `${product.name} added to cart`
+        : `Increased quantity of ${product.name}`
+    );
 
     this.saveCart();
   }
@@ -119,11 +117,17 @@ export class CartService {
   }
 
   clear() {
-
     this._items.set([]);
-    localStorage.removeItem(this.getCartKey());
-
+    this.saveCart();
     this.showMessage('Cart cleared');
+  }
+
+  /* =========================
+     CART RELOAD (🔥 IMPORTANT)
+  ========================= */
+
+  reloadCart() {
+    this._items.set(this.loadCart());
   }
 
   /* =========================
@@ -170,5 +174,4 @@ export class CartService {
       ? `cart_${user.email}`
       : 'cart_guest';
   }
-
 }
