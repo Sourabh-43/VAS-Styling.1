@@ -3,6 +3,10 @@ import { HttpInterceptorFn } from '@angular/common/http';
 export const tokenInterceptor: HttpInterceptorFn = (req, next) => {
 
   const token = localStorage.getItem('token');
+
+if (!token) {
+  return next(req);
+}
    console.log('Interceptor running');    
   console.log('Token:', token);           
 

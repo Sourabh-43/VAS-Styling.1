@@ -1,4 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { 
+  Component, 
+  OnInit, 
+  ChangeDetectorRef 
+} from '@angular/core';
+
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -23,6 +28,8 @@ export class AdminProductFormComponent implements OnInit {
   imagePreview?: string;
   hoverPreview?: string;
 
+  loading = false;
+
   availableSizes = ['XS','S','M','L','XL','XXL','28','30','32','34','36'];
 
   product: Product = {
@@ -40,7 +47,8 @@ export class AdminProductFormComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private productService: ProductService
+    private productService: ProductService,
+    private cdr: ChangeDetectorRef   // ✅ added
   ) {}
 
   ngOnInit(): void {
@@ -50,6 +58,7 @@ export class AdminProductFormComponent implements OnInit {
     if (id) {
 
       this.isEdit = true;
+      this.loading = true;
 
       this.productService.getAll().subscribe(products => {
 
@@ -60,14 +69,20 @@ export class AdminProductFormComponent implements OnInit {
           this.product = { ...existing };
 
           if (existing.image) {
-            this.imagePreview = 'https://vas-styling-backend.onrender.com' + existing.image;
+            this.imagePreview =
+              'https://vas-styling-backend.onrender.com' + existing.image;
           }
 
           if ((existing as any).hoverImage) {
-            this.hoverPreview = 'https://vas-styling-backend.onrender.com' + (existing as any).hoverImage;
+            this.hoverPreview =
+              'https://vas-styling-backend.onrender.com' +
+              (existing as any).hoverImage;
           }
 
         }
+
+        this.loading = false;
+        this.cdr.detectChanges();   // ✅ force UI update
 
       });
 
@@ -78,10 +93,13 @@ export class AdminProductFormComponent implements OnInit {
   toggleSize(size: string) {
 
     if (this.product.sizes.includes(size)) {
-      this.product.sizes = this.product.sizes.filter(s => s !== size);
+      this.product.sizes =
+        this.product.sizes.filter(s => s !== size);
     } else {
       this.product.sizes.push(size);
     }
+
+    this.cdr.detectChanges();  // optional
 
   }
 
@@ -96,6 +114,7 @@ export class AdminProductFormComponent implements OnInit {
 
     reader.onload = () => {
       this.imagePreview = reader.result as string;
+      this.cdr.detectChanges();   // ✅ important
     };
 
     reader.readAsDataURL(file);
@@ -113,6 +132,7 @@ export class AdminProductFormComponent implements OnInit {
 
     reader.onload = () => {
       this.hoverPreview = reader.result as string;
+      this.cdr.detectChanges();   // ✅ important
     };
 
     reader.readAsDataURL(file);
@@ -120,6 +140,16 @@ export class AdminProductFormComponent implements OnInit {
   }
 
   save(): void {
+
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      alert('Session expired. Please login again.');
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    this.loading = true;
 
     const formData = new FormData();
 
@@ -144,6 +174,7 @@ export class AdminProductFormComponent implements OnInit {
 
       this.productService.update(this.product._id, formData)
         .subscribe(() => {
+          this.loading = false;
           this.router.navigate(['/admin/products']);
         });
 
@@ -151,6 +182,7 @@ export class AdminProductFormComponent implements OnInit {
 
       this.productService.create(formData)
         .subscribe(() => {
+          this.loading = false;
           this.router.navigate(['/admin/products']);
         });
 
