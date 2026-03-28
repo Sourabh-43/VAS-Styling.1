@@ -34,16 +34,14 @@ export class ProductComponent implements OnInit, OnDestroy {
 
   private destroy$ = new Subject<void>();
 
+  private BASE_URL = 'https://vas-styling-backend.onrender.com';
+
   constructor(
     private route: ActivatedRoute,
     private productService: ProductService,
     private cart: CartService,
-    private cdr: ChangeDetectorRef   // ✅ added
+    private cdr: ChangeDetectorRef
   ) {}
-
-  /* =========================
-     INIT
-  ========================= */
 
   ngOnInit(): void {
 
@@ -56,31 +54,35 @@ export class ProductComponent implements OnInit, OnDestroy {
         if (!id) {
           this.error = true;
           this.loading = false;
-          this.cdr.detectChanges(); // ✅ force UI
+          this.cdr.detectChanges();
           return;
         }
 
         this.loading = true;
         this.error = false;
-        this.cdr.detectChanges(); // ✅ show loader immediately
+        this.cdr.detectChanges();
 
         this.productService.getById(id)
           .pipe(
             finalize(() => {
               this.loading = false;
-              this.cdr.detectChanges(); // ✅ ensure loader stops
+              this.cdr.detectChanges();
             }),
             takeUntil(this.destroy$)
           )
           .subscribe({
             next: (data: Product) => {
 
-              this.product = data;
+              this.product = {
+                ...data,
+                image: this.getImageUrl(data.image),
+                hoverImage: this.getImageUrl((data as any).hoverImage)
+              };
 
               this.selectedSize = null;
               this.showSizeError = false;
 
-              this.cdr.detectChanges(); // ✅ update UI with product
+              this.cdr.detectChanges();
             },
             error: (err) => {
               console.error('product request error', err);
@@ -88,12 +90,31 @@ export class ProductComponent implements OnInit, OnDestroy {
               this.error = true;
               this.loading = false;
 
-              this.cdr.detectChanges(); // ✅ show error state
+              this.cdr.detectChanges();
             }
           });
 
       });
 
+  }
+
+  /* =========================
+     IMAGE URL FIX
+  ========================= */
+
+  private getImageUrl(image?: string) {
+
+    if (!image) return 'assets/placeholder.png';
+
+    if (image.startsWith('/uploads')) {
+      return this.BASE_URL + image;
+    }
+
+    if (image.startsWith('http')) {
+      return image;
+    }
+
+    return 'assets/' + image;
   }
 
   /* =========================
@@ -103,8 +124,6 @@ export class ProductComponent implements OnInit, OnDestroy {
   selectSize(size: string) {
     this.selectedSize = size;
     this.showSizeError = false;
-
-    this.cdr.detectChanges(); // optional
   }
 
   /* =========================
@@ -115,7 +134,7 @@ export class ProductComponent implements OnInit, OnDestroy {
 
     if (!this.selectedSize || !this.product) {
       this.showSizeError = true;
-      this.cdr.detectChanges(); // ✅ show error instantly
+      this.cdr.detectChanges();
       return;
     }
 
@@ -169,13 +188,7 @@ export class ProductComponent implements OnInit, OnDestroy {
   onImageError(event: Event) {
     const img = event.target as HTMLImageElement;
     img.src = 'assets/placeholder.png';
-
-    this.cdr.detectChanges(); // ✅ update image immediately
   }
-
-  /* =========================
-     CLEANUP
-  ========================= */
 
   ngOnDestroy() {
     this.destroy$.next();
