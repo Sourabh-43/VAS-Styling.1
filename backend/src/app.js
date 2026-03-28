@@ -20,12 +20,16 @@ connectDB();
 ======================= */
 
 app.use(cors({
-  origin: true,
+  origin: [
+    "https://vas-styling-1.onrender.com",
+    "http://localhost:4200"
+  ],
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
+app.options('*', cors()); // 🔥 IMPORTANT
 /* =======================
    MIDDLEWARES
 ======================= */
