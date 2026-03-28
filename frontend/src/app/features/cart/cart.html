@@ -1,6 +1,6 @@
 <section class="cart-container">
 
-  <!-- 🔥 TOAST -->
+  <!-- TOAST -->
   <div class="toast" *ngIf="(cart.message$ | async) as msg">
     {{ msg }}
   </div>
@@ -23,10 +23,11 @@
     <div class="cart-list">
 
       <div
-        class="cart-item"
+        class="cart-item fade-in"
         *ngFor="let item of cart.items(); trackBy: trackById"
       >
 
+        <!-- IMAGE -->
         <img
           class="product-image"
           [src]="item.image ? 'https://vas-styling-backend.onrender.com' + item.image : 'assets/placeholder.png'"
@@ -34,26 +35,34 @@
           (error)="onImageError($event)"
         />
 
+        <!-- DETAILS -->
         <div class="details">
+
           <h3 class="name">{{ item.name }}</h3>
 
           <p class="size" *ngIf="item.size">
             Size: {{ item.size }}
           </p>
 
-          <p class="price">₹{{ item.price }}</p>
+          <div class="bottom-row">
 
-          <div class="quantity">
-            <button class="qty-btn" (click)="cart.decrease(item)">−</button>
-            <span class="qty-value">{{ item.quantity }}</span>
-            <button class="qty-btn" (click)="cart.increase(item)">+</button>
+            <div class="price">₹{{ item.price }}</div>
+
+            <div class="quantity">
+              <button (click)="cart.decrease(item)">−</button>
+              <span>{{ item.quantity }}</span>
+              <button (click)="cart.increase(item)">+</button>
+            </div>
+
           </div>
 
           <button class="remove" (click)="cart.remove(item)">
             Remove
           </button>
+
         </div>
 
+        <!-- TOTAL -->
         <div class="item-total">
           ₹{{ item.price * item.quantity }}
         </div>
