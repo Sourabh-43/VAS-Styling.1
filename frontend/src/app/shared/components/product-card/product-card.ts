@@ -16,8 +16,8 @@ export class ProductCardComponent {
   @Input() product!: Product;
 
   @Output() onAddToCart = new EventEmitter<Product>();
-
-  getImageUrl(image: string | null | undefined): string {
+  
+  /*getImageUrl(image: string | null | undefined): string {
 
     if (!image) {
       return 'assets/placeholder.png';
@@ -29,6 +29,7 @@ export class ProductCardComponent {
 
     return 'https://vas-styling-backend.onrender.com' + image;
   }
+    */
 
   onImageError(event: any) {
     event.target.src = 'assets/placeholder.png';
