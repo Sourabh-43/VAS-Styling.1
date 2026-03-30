@@ -179,10 +179,13 @@
 }
 
 .category-card.arrivals {
-  background-image: url("/assets/images/categories/new-arrivals.jpg");
-  background-size: cover;
-  background-position: center;
-}
+  background: linear-gradient(
+    135deg,
+    #000000,
+    #1a1a1a,
+    #111111
+  );
+} 
 
 .category-card:hover {
   transform: scale(1.04);
