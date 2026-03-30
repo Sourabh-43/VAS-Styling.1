@@ -4,6 +4,32 @@ const path = require('path');
 const fs = require('fs');
 
 /* =======================
+   BASE URL FORMATTER
+======================= */
+
+const BASE_URL =
+  process.env.BASE_URL ||
+  'https://vas-styling-backend.onrender.com';
+
+const formatImage = (product) => {
+
+  if (!product) return product;
+
+  const p = product.toObject ? product.toObject() : product;
+
+  if (p.image && !p.image.startsWith('http')) {
+    p.image = BASE_URL + p.image;
+  }
+
+  if (p.hoverImage && !p.hoverImage.startsWith('http')) {
+    p.hoverImage = BASE_URL + p.hoverImage;
+  }
+
+  return p;
+};
+
+
+/* =======================
    MULTER CONFIG
 ======================= */
 
@@ -64,7 +90,7 @@ exports.getProducts = async (req, res) => {
     const products = await Product.find(filter)
       .sort({ createdAt: -1 });
 
-    res.json(products);
+    res.json(products.map(formatImage));
 
   } catch (error) {
 
@@ -105,11 +131,11 @@ exports.searchProducts = async (req, res) => {
     if (category) filter.category = category;
 
     const products = await Product.find(filter)
-      .select('name price image slug')
+      .select('name price image slug hoverImage')
       .limit(5)
       .sort({ createdAt: -1 });
 
-    res.json(products);
+    res.json(products.map(formatImage));
 
   } catch (error) {
 
@@ -141,7 +167,7 @@ exports.getProductById = async (req, res) => {
       });
     }
 
-    res.json(product);
+    res.json(formatImage(product));
 
   } catch (error) {
 
@@ -202,23 +228,13 @@ exports.createProduct = async (req, res) => {
         : JSON.parse(sizes)
       : [];
 
-
-
-    /* MAIN IMAGE */
-
     const imagePath = req.files?.image
       ? `/uploads/${req.files.image[0].filename}`
       : null;
 
-
-
-    /* HOVER IMAGE */
-
     const hoverPath = req.files?.hoverImage
       ? `/uploads/${req.files.hoverImage[0].filename}`
       : null;
-
-
 
     const product = await Product.create({
       name,
@@ -233,7 +249,7 @@ exports.createProduct = async (req, res) => {
       hoverImage: hoverPath
     });
 
-    res.status(201).json(product);
+    res.status(201).json(formatImage(product));
 
   } catch (error) {
 
@@ -274,10 +290,6 @@ exports.updateProduct = async (req, res) => {
         : JSON.parse(updateData.sizes);
     }
 
-
-
-    /* UPDATE MAIN IMAGE */
-
     if (req.files?.image) {
 
       if (product.image) {
@@ -295,10 +307,6 @@ exports.updateProduct = async (req, res) => {
       updateData.image =
         `/uploads/${req.files.image[0].filename}`;
     }
-
-
-
-    /* UPDATE HOVER IMAGE */
 
     if (req.files?.hoverImage) {
 
@@ -320,15 +328,13 @@ exports.updateProduct = async (req, res) => {
         `/uploads/${req.files.hoverImage[0].filename}`;
     }
 
-
-
     const updated = await Product.findByIdAndUpdate(
       req.params.id,
       updateData,
       { new: true, runValidators: true }
     );
 
-    res.json(updated);
+    res.json(formatImage(updated));
 
   } catch (error) {
 
@@ -360,8 +366,6 @@ exports.deleteProduct = async (req, res) => {
       });
     }
 
-
-
     if (product.image) {
 
       const imagePath = path.join(
@@ -376,8 +380,6 @@ exports.deleteProduct = async (req, res) => {
 
     }
 
-
-
     if (product.hoverImage) {
 
       const hoverPath = path.join(
@@ -391,8 +393,6 @@ exports.deleteProduct = async (req, res) => {
         fs.unlinkSync(hoverPath);
 
     }
-
-
 
     await product.deleteOne();
 
