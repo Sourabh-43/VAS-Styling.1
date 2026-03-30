@@ -17,12 +17,32 @@ const formatImage = (product) => {
 
   const p = product.toObject ? product.toObject() : product;
 
-  if (p.image && !p.image.startsWith('http')) {
-    p.image = BASE_URL + p.image;
+  /* MAIN IMAGE */
+
+  if (p.image) {
+
+    if (!p.image.includes(BASE_URL)) {
+
+      if (p.image.startsWith('/uploads')) {
+        p.image = BASE_URL + p.image;
+      }
+
+    }
+
   }
 
-  if (p.hoverImage && !p.hoverImage.startsWith('http')) {
-    p.hoverImage = BASE_URL + p.hoverImage;
+  /* HOVER IMAGE */
+
+  if (p.hoverImage) {
+
+    if (!p.hoverImage.includes(BASE_URL)) {
+
+      if (p.hoverImage.startsWith('/uploads')) {
+        p.hoverImage = BASE_URL + p.hoverImage;
+      }
+
+    }
+
   }
 
   return p;
