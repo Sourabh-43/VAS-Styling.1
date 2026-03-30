@@ -104,21 +104,22 @@ export class ProductComponent implements OnInit, OnDestroy {
      IMAGE URL FIX
   ========================= */
 
-  private getImageUrl(image?: string) {
+ private getImageUrl(image?: string) {
 
   if (!image) return 'assets/placeholder.png';
 
-  // If already full URL
+  // Already full URL
   if (image.startsWith('http')) {
     return image;
   }
 
-  // If upload path
+  // Upload folder path
   if (image.startsWith('/uploads')) {
     return this.BASE_URL + image;
   }
 
-  return 'assets/' + image;
+  // If just filename
+  return this.BASE_URL + '/uploads/' + image;
 }
   /* =========================
      SIZE SELECT
