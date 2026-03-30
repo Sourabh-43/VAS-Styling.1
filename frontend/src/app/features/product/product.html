@@ -15,7 +15,7 @@
       <div class="image-box">
         <img
           class="product-image"
-          [src]="product.image ? 'https://vas-styling-backend.onrender.com' + product.image : 'assets/placeholder.png'"
+          [src]="product.image"
           (error)="onImageError($event)"
           [alt]="product.name"
         />
