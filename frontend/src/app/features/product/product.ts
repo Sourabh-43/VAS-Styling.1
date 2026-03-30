@@ -71,7 +71,6 @@ export class ProductComponent implements OnInit, OnDestroy {
           .subscribe({
             next: (data: Product) => {
 
-              // FINAL SAFE IMAGE HANDLING
               this.product = {
                 ...data,
                 image: this.normalizeImage(data.image),
@@ -85,6 +84,7 @@ export class ProductComponent implements OnInit, OnDestroy {
 
               this.cdr.detectChanges();
             },
+
             error: (err) => {
               console.error('product request error', err);
 
@@ -100,7 +100,7 @@ export class ProductComponent implements OnInit, OnDestroy {
   }
 
   /* =========================
-     NORMALIZE IMAGE
+     IMAGE NORMALIZER
   ========================= */
 
   private normalizeImage(image?: string): string {
