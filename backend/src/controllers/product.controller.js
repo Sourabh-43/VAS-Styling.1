@@ -25,6 +25,8 @@ const formatImage = (product) => {
 
       if (p.image.startsWith('/uploads')) {
         p.image = BASE_URL + p.image;
+      } else {
+        p.image = `${BASE_URL}/uploads/${p.image}`;
       }
 
     }
@@ -39,6 +41,8 @@ const formatImage = (product) => {
 
       if (p.hoverImage.startsWith('/uploads')) {
         p.hoverImage = BASE_URL + p.hoverImage;
+      } else {
+        p.hoverImage = `${BASE_URL}/uploads/${p.hoverImage}`;
       }
 
     }
