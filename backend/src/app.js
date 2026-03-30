@@ -24,9 +24,7 @@ app.use(cors({
     "https://vas-styling-1.onrender.com",
     "http://localhost:4200"
   ],
-  credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"]
+  credentials: true
 }));
 
 /* =======================
@@ -36,10 +34,10 @@ app.use(cors({
 app.use(express.json());
 
 /* =======================
-   UPLOADS FOLDER (FIXED)
+   UPLOADS FOLDER (FINAL FIX)
 ======================= */
 
-const uploadDir = path.join(__dirname, 'uploads');
+const uploadDir = path.join(process.cwd(), 'uploads');
 
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
