@@ -71,9 +71,13 @@ export class ProductComponent implements OnInit, OnDestroy {
           .subscribe({
             next: (data: Product) => {
 
+              // FINAL SAFE IMAGE HANDLING
               this.product = {
                 ...data,
-                hoverImage: data.hoverImage || data.image
+                image: this.normalizeImage(data.image),
+                hoverImage: this.normalizeImage(
+                  data.hoverImage || data.image
+                )
               };
 
               this.selectedSize = null;
@@ -93,6 +97,26 @@ export class ProductComponent implements OnInit, OnDestroy {
 
       });
 
+  }
+
+  /* =========================
+     NORMALIZE IMAGE
+  ========================= */
+
+  private normalizeImage(image?: string): string {
+
+    if (!image) return 'assets/placeholder.png';
+
+    // already full url
+    if (image.startsWith('http')) return image;
+
+    // uploads path
+    if (image.startsWith('/uploads')) {
+      return `https://vas-styling-backend.onrender.com${image}`;
+    }
+
+    // filename only
+    return `https://vas-styling-backend.onrender.com/uploads/${image}`;
   }
 
   /* =========================
