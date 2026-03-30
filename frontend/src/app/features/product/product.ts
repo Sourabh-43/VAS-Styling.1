@@ -34,8 +34,6 @@ export class ProductComponent implements OnInit, OnDestroy {
 
   private destroy$ = new Subject<void>();
 
-  private BASE_URL = 'https://vas-styling-backend.onrender.com';
-
   constructor(
     private route: ActivatedRoute,
     private productService: ProductService,
@@ -73,13 +71,10 @@ export class ProductComponent implements OnInit, OnDestroy {
           .subscribe({
             next: (data: Product) => {
 
-               this.product = {
-    ...data,
-    image: this.getImageUrl(data.image),
-    hoverImage: this.getImageUrl(
-      (data as any).hoverImage || data.image
-    )
-  };
+              this.product = {
+                ...data,
+                hoverImage: data.hoverImage || data.image
+              };
 
               this.selectedSize = null;
               this.showSizeError = false;
@@ -100,27 +95,6 @@ export class ProductComponent implements OnInit, OnDestroy {
 
   }
 
-  /* =========================
-     IMAGE URL FIX
-  ========================= */
-
- private getImageUrl(image?: string) {
-
-  if (!image) return 'assets/placeholder.png';
-
-  // Already full URL
-  if (image.startsWith('http')) {
-    return image;
-  }
-
-  // Upload folder path
-  if (image.startsWith('/uploads')) {
-    return this.BASE_URL + image;
-  }
-
-  // If just filename
-  return this.BASE_URL + '/uploads/' + image;
-}
   /* =========================
      SIZE SELECT
   ========================= */
