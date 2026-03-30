@@ -4,108 +4,94 @@
   padding: 2rem;
 }
 
-.admin-header {
+.orders-list {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 2rem;
-
-  h1 {
-    margin: 0;
-  }
-}
-
-.admin-nav {
-  display: flex;
+  flex-direction: column;
   gap: 1.2rem;
-
-  a {
-    text-decoration: none;
-    color: #555;
-    font-weight: 500;
-
-    &.active {
-      color: #2563eb;
-      border-bottom: 2px solid #2563eb;
-      padding-bottom: 2px;
-    }
-  }
-}
-
-.admin-card {
-  background: #fff;
-  border-radius: 14px;
-  padding: 1.5rem;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-
-  h2 {
-    margin-top: 0;
-  }
-}
-
-
-.empty-state {
-  text-align: center;
-  padding: 3rem;
-  color: #666;
-
-  .icon {
-    font-size: 3rem;
-    display: block;
-    margin-bottom: 1rem;
-  }
-}
-.primary-btn {
-  display: inline-block;
-  margin-top: 1.5rem;
-  padding: 0.6rem 1.4rem;
-  background: #2563eb;
-  color: #fff;
-  border-radius: 999px;
-  text-decoration: none;
 }
 
 .order-card {
+  background: #fff;
+  border-radius: 14px;
+  padding: 1.3rem;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.05);
   border: 1px solid #eee;
-  border-radius: 12px;
-  padding: 1rem;
-  margin-top: 1.2rem;
 }
 
 .order-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
 
-  .status {
-    text-transform: capitalize;
-    font-size: 0.85rem;
-    padding: 4px 10px;
-    border-radius: 20px;
-
-    &.pending {
-      background: #fff7ed;
-      color: #c2410c;
-    }
-
-    &.completed {
-      background: #ecfdf5;
-      color: #047857;
-    }
+  .left h4 {
+    margin: 0;
   }
+
+  .right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+}
+
+.status {
+  text-transform: capitalize;
+  font-size: 12px;
+  padding: 4px 12px;
+  border-radius: 20px;
+}
+
+.pending {
+  background: #fff7ed;
+  color: #c2410c;
+}
+
+.paid {
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.shipped {
+  background: #f0fdf4;
+  color: #047857;
+}
+
+.delivered {
+  background: #ecfeff;
+  color: #0891b2;
+}
+
+.status-select {
+  padding: 5px 10px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+}
+
+.view-btn {
+  padding: 6px 14px;
+  background: #111;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.order-details {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px dashed #eee;
 }
 
 .order-item {
   display: grid;
-  grid-template-columns: 50px 1fr auto;
+  grid-template-columns: 60px 1fr auto;
   gap: 1rem;
   align-items: center;
   padding: 0.6rem 0;
 
   img {
-    width: 50px;
-    height: 60px;
+    width: 60px;
+    height: 70px;
     object-fit: cover;
     border-radius: 6px;
   }
@@ -126,4 +112,5 @@
   padding-top: 1rem;
   border-top: 1px dashed #eee;
   font-size: 1.1rem;
+  margin-top: 10px;
 }

@@ -1,22 +1,96 @@
 <section class="admin-page">
+
   <h2>Orders</h2>
 
   <p *ngIf="orders().length === 0">No orders yet.</p>
 
-  <table *ngIf="orders().length > 0">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Total</th>
-        <th>Status</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let order of orders()">
-        <td>{{ order.id }}</td>
-        <td>₹{{ order.total }}</td>
-        <td>{{ order.status }}</td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="orders-list" *ngIf="orders().length > 0">
+
+    <div class="order-card" *ngFor="let order of orders()">
+
+      <!-- HEADER -->
+      <div class="order-header">
+
+        <div class="left">
+          <h4>Order #{{ order.id | slice:0:8 }}</h4>
+          <small>
+            {{ order.createdAt | date:'medium' }}
+          </small>
+        </div>
+
+        <div class="right">
+
+          <span 
+            class="status"
+            [ngClass]="order.status">
+
+            {{ order.status }}
+
+          </span>
+
+          <select
+            class="status-select"
+            [value]="order.status"
+            (change)="changeStatus(order.id, $any($event.target).value)">
+
+            <option value="pending">Pending</option>
+            <option value="paid">Paid</option>
+            <option value="shipped">Shipped</option>
+            <option value="delivered">Delivered</option>
+
+          </select>
+
+          <button 
+            class="view-btn"
+            (click)="toggle(order.id)">
+            View
+          </button>
+
+        </div>
+
+      </div>
+
+      <!-- DETAILS -->
+      <div 
+        class="order-details"
+        *ngIf="expandedOrder() === order.id">
+
+        <div 
+          class="order-item"
+          *ngFor="let item of order.items">
+
+          <img [src]="item.image" />
+
+          <div>
+
+            <p>{{ item.name }}</p>
+
+            <small>
+              Size: {{ item.size }}
+              • Qty: {{ item.quantity }}
+            </small>
+
+          </div>
+
+          <div>
+
+            ₹{{ item.price }}
+
+          </div>
+
+        </div>
+
+        <div class="order-footer">
+
+          <strong>Total</strong>
+          <strong>₹{{ order.total }}</strong>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
 </section>
