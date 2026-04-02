@@ -24,24 +24,15 @@ const productSchema = new mongoose.Schema(
 
   stock: {
     type: Number,
-    required: true,
     default: 0,
     min: 0
   },
 
-  /* MULTIPLE PRODUCT IMAGES */
   images: {
     type: [String],
     default: []
   },
 
-  /* SUPPORT OLD PRODUCTS */
-  image: {
-    type: String,
-    default: null
-  },
-
-  /* OPTIONAL HOVER IMAGE */
   hoverImage: {
     type: String,
     default: null

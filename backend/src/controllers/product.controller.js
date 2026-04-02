@@ -19,27 +19,9 @@ const storage = new CloudinaryStorage({
 const upload = multer({ storage });
 
 exports.upload = upload.fields([
-  { name: 'images', maxCount: 5 },
+  { name: 'images', maxCount: 3 },
   { name: 'hoverImage', maxCount: 1 }
 ]);
-
-
-/* =======================
-   NORMALIZE OLD PRODUCTS
-======================= */
-
-const normalizeProduct = (product) => {
-
-  const p = product.toObject ? product.toObject() : product;
-
-  // support old products
-  if (!p.images && p.image) {
-    p.images = [p.image];
-  }
-
-  return p;
-};
-
 
 /* =======================
    GET ALL PRODUCTS
@@ -58,11 +40,11 @@ exports.getProducts = async (req, res) => {
     const products = await Product.find(filter)
       .sort({ createdAt: -1 });
 
-    res.json(products.map(normalizeProduct));
+    res.json(products);
 
   } catch (error) {
 
-    console.error('Get products error:', error);
+    console.error(error);
 
     res.status(500).json({
       message: 'Failed to fetch products'
@@ -70,7 +52,6 @@ exports.getProducts = async (req, res) => {
 
   }
 };
-
 
 /* =======================
    SEARCH PRODUCTS
@@ -98,15 +79,14 @@ exports.searchProducts = async (req, res) => {
     if (category) filter.category = category;
 
     const products = await Product.find(filter)
-      .select('name price images image slug hoverImage')
       .limit(5)
       .sort({ createdAt: -1 });
 
-    res.json(products.map(normalizeProduct));
+    res.json(products);
 
   } catch (error) {
 
-    console.error('Search products error:', error);
+    console.error(error);
 
     res.status(500).json({
       message: 'Search failed'
@@ -115,7 +95,6 @@ exports.searchProducts = async (req, res) => {
   }
 
 };
-
 
 /* =======================
    GET PRODUCT BY ID
@@ -133,7 +112,7 @@ exports.getProductById = async (req, res) => {
       });
     }
 
-    res.json(normalizeProduct(product));
+    res.json(product);
 
   } catch (error) {
 
@@ -146,7 +125,6 @@ exports.getProductById = async (req, res) => {
   }
 
 };
-
 
 /* =======================
    CREATE PRODUCT
@@ -169,8 +147,7 @@ exports.createProduct = async (req, res) => {
 
     if (!name || price === undefined || !gender || !category) {
       return res.status(400).json({
-        message:
-          'Name, price, gender and category are required'
+        message: 'Name, price, gender and category are required'
       });
     }
 
@@ -201,6 +178,12 @@ exports.createProduct = async (req, res) => {
       ? req.files.hoverImage[0].path
       : null;
 
+    if (images.length === 0) {
+      return res.status(400).json({
+        message: 'At least one product image required'
+      });
+    }
+
     const product = await Product.create({
       name,
       slug: generatedSlug,
@@ -214,21 +197,19 @@ exports.createProduct = async (req, res) => {
       hoverImage
     });
 
-    res.status(201).json(normalizeProduct(product));
+    res.status(201).json(product);
 
   } catch (error) {
 
-    console.error('Create product error:', error);
+    console.error(error);
 
     res.status(500).json({
-      message: 'Failed to create product',
-      error: error.message
+      message: 'Failed to create product'
     });
 
   }
 
 };
-
 
 /* =======================
    UPDATE PRODUCT
@@ -270,11 +251,11 @@ exports.updateProduct = async (req, res) => {
       { new: true, runValidators: true }
     );
 
-    res.json(normalizeProduct(updated));
+    res.json(updated);
 
   } catch (error) {
 
-    console.error('Update product error:', error);
+    console.error(error);
 
     res.status(500).json({
       message: 'Failed to update product'
@@ -283,7 +264,6 @@ exports.updateProduct = async (req, res) => {
   }
 
 };
-
 
 /* =======================
    DELETE PRODUCT
@@ -309,7 +289,7 @@ exports.deleteProduct = async (req, res) => {
 
   } catch (error) {
 
-    console.error('Delete product error:', error);
+    console.error(error);
 
     res.status(500).json({
       message: 'Failed to delete product'
