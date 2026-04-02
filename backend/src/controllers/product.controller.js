@@ -134,6 +134,10 @@ exports.createProduct = async (req, res) => {
 
   try {
 
+    console.log("========== CREATE PRODUCT ==========");
+    console.log("BODY:", req.body);
+    console.log("FILES:", req.files);
+
     let {
       name,
       slug,
@@ -164,11 +168,18 @@ exports.createProduct = async (req, res) => {
 
     if (existing) generatedSlug += '-' + Date.now();
 
-    const parsedSizes = sizes
-      ? Array.isArray(sizes)
-        ? sizes
-        : JSON.parse(sizes)
-      : [];
+    let parsedSizes = [];
+
+    try {
+      parsedSizes = sizes
+        ? Array.isArray(sizes)
+          ? sizes
+          : JSON.parse(sizes)
+        : [];
+    } catch (err) {
+      console.log("SIZE PARSE ERROR:", err);
+      parsedSizes = [];
+    }
 
     const images = req.files?.images
       ? req.files.images.map(file => file.path)
@@ -177,6 +188,9 @@ exports.createProduct = async (req, res) => {
     const hoverImage = req.files?.hoverImage
       ? req.files.hoverImage[0].path
       : null;
+
+    console.log("IMAGES:", images);
+    console.log("HOVER IMAGE:", hoverImage);
 
     if (images.length === 0) {
       return res.status(400).json({
@@ -197,20 +211,21 @@ exports.createProduct = async (req, res) => {
       hoverImage
     });
 
+    console.log("PRODUCT CREATED:", product);
+
     res.status(201).json(product);
 
   } catch (error) {
 
-    console.error(error);
+    console.error("CREATE PRODUCT ERROR:", error);
 
     res.status(500).json({
-      message: 'Failed to create product'
+      message: error.message
     });
 
   }
 
 };
-
 /* =======================
    UPDATE PRODUCT
 ======================= */
