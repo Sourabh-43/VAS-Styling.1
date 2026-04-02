@@ -8,12 +8,12 @@ const cloudinary = require('../config/cloudinary');
 ======================= */
 
 const storage = new CloudinaryStorage({
-  cloudinary: cloudinary,
-  params: {
+  cloudinary,
+  params: async (req, file) => ({
     folder: 'vasmart-products',
-    allowed_formats: ['jpg', 'png', 'webp'],
+    format: 'webp',
     transformation: [{ width: 1200, crop: 'limit' }]
-  }
+  })
 });
 
 const upload = multer({ storage });
@@ -134,10 +134,6 @@ exports.createProduct = async (req, res) => {
 
   try {
 
-    console.log("========== CREATE PRODUCT ==========");
-    console.log("BODY:", req.body);
-    console.log("FILES:", req.files);
-
     let {
       name,
       slug,
@@ -168,18 +164,21 @@ exports.createProduct = async (req, res) => {
 
     if (existing) generatedSlug += '-' + Date.now();
 
+    /* Safe Sizes Parsing */
+
     let parsedSizes = [];
 
     try {
-      parsedSizes = sizes
-        ? Array.isArray(sizes)
+      if (sizes) {
+        parsedSizes = Array.isArray(sizes)
           ? sizes
-          : JSON.parse(sizes)
-        : [];
-    } catch (err) {
-      console.log("SIZE PARSE ERROR:", err);
-      parsedSizes = [];
+          : JSON.parse(sizes);
+      }
+    } catch (error) {
+      parsedSizes = sizes ? sizes.split(',') : [];
     }
+
+    /* Images */
 
     const images = req.files?.images
       ? req.files.images.map(file => file.path)
@@ -188,9 +187,6 @@ exports.createProduct = async (req, res) => {
     const hoverImage = req.files?.hoverImage
       ? req.files.hoverImage[0].path
       : null;
-
-    console.log("IMAGES:", images);
-    console.log("HOVER IMAGE:", hoverImage);
 
     if (images.length === 0) {
       return res.status(400).json({
@@ -211,8 +207,6 @@ exports.createProduct = async (req, res) => {
       hoverImage
     });
 
-    console.log("PRODUCT CREATED:", product);
-
     res.status(201).json(product);
 
   } catch (error) {
@@ -226,6 +220,7 @@ exports.createProduct = async (req, res) => {
   }
 
 };
+
 /* =======================
    UPDATE PRODUCT
 ======================= */
@@ -244,11 +239,19 @@ exports.updateProduct = async (req, res) => {
 
     let updateData = { ...req.body };
 
+    /* Safe Sizes */
+
     if (updateData.sizes) {
-      updateData.sizes = Array.isArray(updateData.sizes)
-        ? updateData.sizes
-        : JSON.parse(updateData.sizes);
+      try {
+        updateData.sizes = Array.isArray(updateData.sizes)
+          ? updateData.sizes
+          : JSON.parse(updateData.sizes);
+      } catch {
+        updateData.sizes = updateData.sizes.split(',');
+      }
     }
+
+    /* Images */
 
     if (req.files?.images) {
       updateData.images =
