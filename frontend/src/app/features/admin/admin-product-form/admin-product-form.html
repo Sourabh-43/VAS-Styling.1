@@ -113,21 +113,34 @@
     <!-- RIGHT COLUMN -->
     <div class="form-right">
 
-      <!-- MAIN IMAGE -->
+      <!-- MULTIPLE PRODUCT IMAGES -->
       <div class="image-upload">
 
-        <label>Main Product Image</label>
+        <label>Product Images</label>
 
-        <div class="image-preview">
-          <img *ngIf="imagePreview" [src]="imagePreview" />
-          <div *ngIf="!imagePreview" class="placeholder">
-            No Image Selected
-          </div>
+        <div class="image-preview multi">
+
+          <ng-container *ngIf="imagePreviews.length > 0; else noImage">
+
+            <img
+              *ngFor="let img of imagePreviews"
+              [src]="img"
+            />
+
+          </ng-container>
+
+          <ng-template #noImage>
+            <div class="placeholder">
+              No Image Selected
+            </div>
+          </ng-template>
+
         </div>
 
         <input
           type="file"
-          name="image"
+          name="images"
+          multiple
           (change)="onFileSelected($event)"
           accept="image/*"
         />
@@ -141,10 +154,18 @@
         <label>Hover Image (Optional)</label>
 
         <div class="image-preview">
-          <img *ngIf="hoverPreview" [src]="hoverPreview" />
-          <div *ngIf="!hoverPreview" class="placeholder">
-            No Hover Image
-          </div>
+
+          <img 
+            *ngIf="hoverPreview; else noHover"
+            [src]="hoverPreview"
+          />
+
+          <ng-template #noHover>
+            <div class="placeholder">
+              No Hover Image
+            </div>
+          </ng-template>
+
         </div>
 
         <input
