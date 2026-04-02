@@ -100,6 +100,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
     this.searchSubject.next(this.searchQuery);
   }
+  onImageError(event: Event) {
+  const img = event.target as HTMLImageElement;
+  img.src = 'assets/no-image.png';
+}
 
   goToProduct(product: Product) {
 

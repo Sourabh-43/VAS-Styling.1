@@ -19,19 +19,16 @@
         <span></span>
       </div>
 
-      <!-- DESKTOP SHOP -->
-       <a routerLink="/" class="logo">
+      <!-- LOGO -->
+      <a routerLink="/" class="logo">
         VAS-Styling
       </a>
-
-      
 
     </div>
 
     <!-- CENTER -->
     <div class="nav-center">
 
-      
       <div class="search-container">
 
         <input
@@ -52,10 +49,10 @@
           >
 
             <img
-              [src]="product.image"
+              [src]="product.images?.[0] || 'assets/no-image.png'"
               [alt]="product.name"
               loading="lazy"
-              onerror="this.src='assets/no-image.png'"
+              (error)="onImageError($event)"
             />
 
             <div class="search-info">
@@ -74,7 +71,7 @@
     <!-- RIGHT -->
     <div class="nav-right">
 
-      <!-- 👤 USER (AVATAR DROPDOWN) -->
+      <!-- USER -->
       <div class="user-menu">
 
         <div class="avatar" (click)="toggleDropdown()">
@@ -87,17 +84,14 @@
             {{ auth.getUserName() || 'Guest' }}
           </div>
 
-          <!-- NOT LOGGED IN -->
           <ng-container *ngIf="!auth.isLoggedIn()">
             <a routerLink="/login" (click)="closeDropdown()">Login</a>
           </ng-container>
-          <ng-container>
-            <a routerLink="/shop" class="nav-link desktop-only">
-        Shop
-      </a>
-      </ng-container>
 
-          <!-- LOGGED IN -->
+          <ng-container>
+            <a routerLink="/shop" (click)="closeDropdown()">Shop</a>
+          </ng-container>
+
           <ng-container *ngIf="auth.isLoggedIn()">
 
             <a *ngIf="auth.isAdmin()"
@@ -116,7 +110,7 @@
 
       </div>
 
-      <!-- 🛒 CART -->
+      <!-- CART -->
       <a routerLink="/cart" class="cart-icon" id="cartIcon">
         🛒
         <span *ngIf="cart.count() > 0" class="cart-badge">
@@ -128,7 +122,7 @@
 
   </div>
 
-  <!-- 📱 MOBILE DRAWER -->
+  <!-- MOBILE MENU -->
   <div class="mobile-menu" [class.open]="isMobileMenuOpen">
 
     <div class="mobile-content">
@@ -157,7 +151,7 @@
 
   </div>
 
-  <!-- 🌑 OVERLAY -->
+  <!-- OVERLAY -->
   <div class="overlay"
        *ngIf="isMobileMenuOpen"
        (click)="closeMobileMenu()">
