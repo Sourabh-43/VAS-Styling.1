@@ -29,10 +29,16 @@ const productSchema = new mongoose.Schema(
     min: 0
   },
 
-  /* MAIN PRODUCT IMAGE */
+  /* MULTIPLE PRODUCT IMAGES */
+  images: {
+    type: [String],
+    default: []
+  },
+
+  /* SUPPORT OLD PRODUCTS */
   image: {
     type: String,
-    required: true
+    default: null
   },
 
   /* OPTIONAL HOVER IMAGE */

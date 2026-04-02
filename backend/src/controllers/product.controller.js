@@ -1,100 +1,44 @@
 const Product = require('../models/Product');
 const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+const cloudinary = require('../config/cloudinary');
 
 /* =======================
-   BASE URL FORMATTER
+   CLOUDINARY CONFIG
 ======================= */
 
-const BASE_URL =
-  process.env.BASE_URL ||
-  'https://vas-styling-backend.onrender.com';
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: 'vasmart-products',
+    allowed_formats: ['jpg', 'png', 'webp'],
+    transformation: [{ width: 1200, crop: 'limit' }]
+  }
+});
 
-const formatImage = (product) => {
+const upload = multer({ storage });
 
-  if (!product) return product;
+exports.upload = upload.fields([
+  { name: 'images', maxCount: 5 },
+  { name: 'hoverImage', maxCount: 1 }
+]);
+
+
+/* =======================
+   NORMALIZE OLD PRODUCTS
+======================= */
+
+const normalizeProduct = (product) => {
 
   const p = product.toObject ? product.toObject() : product;
 
-  /* MAIN IMAGE */
-
-  if (p.image) {
-
-    if (!p.image.includes(BASE_URL)) {
-
-      if (p.image.startsWith('/uploads')) {
-        p.image = BASE_URL + p.image;
-      } else {
-        p.image = `${BASE_URL}/uploads/${p.image}`;
-      }
-
-    }
-
-  }
-
-  /* HOVER IMAGE */
-
-  if (p.hoverImage) {
-
-    if (!p.hoverImage.includes(BASE_URL)) {
-
-      if (p.hoverImage.startsWith('/uploads')) {
-        p.hoverImage = BASE_URL + p.hoverImage;
-      } else {
-        p.hoverImage = `${BASE_URL}/uploads/${p.hoverImage}`;
-      }
-
-    }
-
+  // support old products
+  if (!p.images && p.image) {
+    p.images = [p.image];
   }
 
   return p;
 };
-
-
-/* =======================
-   MULTER CONFIG
-======================= */
-
-if (!fs.existsSync('uploads')) {
-  fs.mkdirSync('uploads');
-}
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, 'uploads/'),
-  filename: (req, file, cb) => {
-    const uniqueName =
-      Date.now() + '-' + Math.round(Math.random() * 1e9);
-
-    cb(null, uniqueName + path.extname(file.originalname));
-  }
-});
-
-const fileFilter = (req, file, cb) => {
-  const allowedTypes = [
-    'image/jpeg',
-    'image/png',
-    'image/webp'
-  ];
-
-  if (allowedTypes.includes(file.mimetype)) cb(null, true);
-  else cb(new Error('Only JPG, PNG, WEBP images allowed'), false);
-};
-
-const upload = multer({
-  storage,
-  fileFilter,
-  limits: { fileSize: 5 * 1024 * 1024 }
-});
-
-/* SUPPORT MULTIPLE IMAGES */
-
-exports.upload = upload.fields([
-  { name: 'image', maxCount: 1 },
-  { name: 'hoverImage', maxCount: 1 }
-]);
-
 
 
 /* =======================
@@ -114,7 +58,7 @@ exports.getProducts = async (req, res) => {
     const products = await Product.find(filter)
       .sort({ createdAt: -1 });
 
-    res.json(products.map(formatImage));
+    res.json(products.map(normalizeProduct));
 
   } catch (error) {
 
@@ -126,7 +70,6 @@ exports.getProducts = async (req, res) => {
 
   }
 };
-
 
 
 /* =======================
@@ -155,11 +98,11 @@ exports.searchProducts = async (req, res) => {
     if (category) filter.category = category;
 
     const products = await Product.find(filter)
-      .select('name price image slug hoverImage')
+      .select('name price images image slug hoverImage')
       .limit(5)
       .sort({ createdAt: -1 });
 
-    res.json(products.map(formatImage));
+    res.json(products.map(normalizeProduct));
 
   } catch (error) {
 
@@ -172,7 +115,6 @@ exports.searchProducts = async (req, res) => {
   }
 
 };
-
 
 
 /* =======================
@@ -191,7 +133,7 @@ exports.getProductById = async (req, res) => {
       });
     }
 
-    res.json(formatImage(product));
+    res.json(normalizeProduct(product));
 
   } catch (error) {
 
@@ -204,7 +146,6 @@ exports.getProductById = async (req, res) => {
   }
 
 };
-
 
 
 /* =======================
@@ -252,12 +193,12 @@ exports.createProduct = async (req, res) => {
         : JSON.parse(sizes)
       : [];
 
-    const imagePath = req.files?.image
-      ? `/uploads/${req.files.image[0].filename}`
-      : null;
+    const images = req.files?.images
+      ? req.files.images.map(file => file.path)
+      : [];
 
-    const hoverPath = req.files?.hoverImage
-      ? `/uploads/${req.files.hoverImage[0].filename}`
+    const hoverImage = req.files?.hoverImage
+      ? req.files.hoverImage[0].path
       : null;
 
     const product = await Product.create({
@@ -269,11 +210,11 @@ exports.createProduct = async (req, res) => {
       category,
       description,
       sizes: parsedSizes,
-      image: imagePath,
-      hoverImage: hoverPath
+      images,
+      hoverImage
     });
 
-    res.status(201).json(formatImage(product));
+    res.status(201).json(normalizeProduct(product));
 
   } catch (error) {
 
@@ -287,7 +228,6 @@ exports.createProduct = async (req, res) => {
   }
 
 };
-
 
 
 /* =======================
@@ -314,42 +254,14 @@ exports.updateProduct = async (req, res) => {
         : JSON.parse(updateData.sizes);
     }
 
-    if (req.files?.image) {
-
-      if (product.image) {
-        const oldPath = path.join(
-          __dirname,
-          '..',
-          '..',
-          product.image
-        );
-
-        if (fs.existsSync(oldPath))
-          fs.unlinkSync(oldPath);
-      }
-
-      updateData.image =
-        `/uploads/${req.files.image[0].filename}`;
+    if (req.files?.images) {
+      updateData.images =
+        req.files.images.map(file => file.path);
     }
 
     if (req.files?.hoverImage) {
-
-      if (product.hoverImage) {
-
-        const oldPath = path.join(
-          __dirname,
-          '..',
-          '..',
-          product.hoverImage
-        );
-
-        if (fs.existsSync(oldPath))
-          fs.unlinkSync(oldPath);
-
-      }
-
       updateData.hoverImage =
-        `/uploads/${req.files.hoverImage[0].filename}`;
+        req.files.hoverImage[0].path;
     }
 
     const updated = await Product.findByIdAndUpdate(
@@ -358,7 +270,7 @@ exports.updateProduct = async (req, res) => {
       { new: true, runValidators: true }
     );
 
-    res.json(formatImage(updated));
+    res.json(normalizeProduct(updated));
 
   } catch (error) {
 
@@ -371,7 +283,6 @@ exports.updateProduct = async (req, res) => {
   }
 
 };
-
 
 
 /* =======================
@@ -388,34 +299,6 @@ exports.deleteProduct = async (req, res) => {
       return res.status(404).json({
         message: 'Product not found'
       });
-    }
-
-    if (product.image) {
-
-      const imagePath = path.join(
-        __dirname,
-        '..',
-        '..',
-        product.image
-      );
-
-      if (fs.existsSync(imagePath))
-        fs.unlinkSync(imagePath);
-
-    }
-
-    if (product.hoverImage) {
-
-      const hoverPath = path.join(
-        __dirname,
-        '..',
-        '..',
-        product.hoverImage
-      );
-
-      if (fs.existsSync(hoverPath))
-        fs.unlinkSync(hoverPath);
-
     }
 
     await product.deleteOne();
