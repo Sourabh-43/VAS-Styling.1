@@ -6,11 +6,12 @@ export interface Product {
   price: number;
   stock: number;
 
-  image: string;
-   hoverImage?: string;
+  images?: string[];   // ✅ new
+  image?: string;      // ✅ old support
+  hoverImage?: string;
 
-  gender: 'men' | 'women';     
-  category: string;           
+  gender: 'men' | 'women';
+  category: string;
 
   sizes: string[];
   description?: string;

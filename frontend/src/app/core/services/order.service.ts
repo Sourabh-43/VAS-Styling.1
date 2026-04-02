@@ -1,6 +1,7 @@
 import { Injectable, signal, effect } from '@angular/core';
 import { Order } from '../models/order';
 import { CartItem } from '../models/cart-item';
+import { AuthService } from '../services/auth.service';
 
 const STORAGE_KEY = 'vasmart_orders';
 

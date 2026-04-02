@@ -22,10 +22,10 @@ export class AdminProductFormComponent implements OnInit {
 
   isEdit = false;
 
-  selectedFile?: File;
-  hoverFile?: File;
+  selectedFiles: File[] = [];
+  imagePreviews: string[] = [];
 
-  imagePreview?: string;
+  hoverFile?: File;
   hoverPreview?: string;
 
   loading = false;
@@ -37,7 +37,7 @@ export class AdminProductFormComponent implements OnInit {
     slug: '',
     price: 0,
     stock: 0,
-    image: '',
+    images: [],
     gender: 'men',
     category: 'tshirts',
     sizes: [],
@@ -48,7 +48,7 @@ export class AdminProductFormComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private productService: ProductService,
-    private cdr: ChangeDetectorRef   // ✅ added
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -68,21 +68,24 @@ export class AdminProductFormComponent implements OnInit {
 
           this.product = { ...existing };
 
-          if (existing.image) {
-            this.imagePreview =
-              'https://vas-styling-backend.onrender.com' + existing.image;
+          // Multiple images
+          if (existing.images?.length) {
+            this.imagePreviews = existing.images;
+          } 
+          // Old single image support
+          else if (existing.image) {
+            this.imagePreviews = [existing.image];
           }
 
-          if ((existing as any).hoverImage) {
-            this.hoverPreview =
-              'https://vas-styling-backend.onrender.com' +
-              (existing as any).hoverImage;
+          // Hover image
+          if (existing.hoverImage) {
+            this.hoverPreview = existing.hoverImage;
           }
 
         }
 
         this.loading = false;
-        this.cdr.detectChanges();   // ✅ force UI update
+        this.cdr.detectChanges();
 
       });
 
@@ -99,27 +102,43 @@ export class AdminProductFormComponent implements OnInit {
       this.product.sizes.push(size);
     }
 
-    this.cdr.detectChanges();  // optional
+    this.cdr.detectChanges();
 
   }
+
+  /* ========================
+     MULTIPLE IMAGE SELECT
+  ======================== */
 
   onFileSelected(event: any) {
 
-    const file = event.target.files[0];
-    if (!file) return;
+    const files = event.target.files;
 
-    this.selectedFile = file;
+    if (!files) return;
 
-    const reader = new FileReader();
+    this.selectedFiles = [];
+    this.imagePreviews = [];
 
-    reader.onload = () => {
-      this.imagePreview = reader.result as string;
-      this.cdr.detectChanges();   // ✅ important
-    };
+    for (let file of files) {
 
-    reader.readAsDataURL(file);
+      this.selectedFiles.push(file);
+
+      const reader = new FileReader();
+
+      reader.onload = () => {
+        this.imagePreviews.push(reader.result as string);
+        this.cdr.detectChanges();
+      };
+
+      reader.readAsDataURL(file);
+
+    }
 
   }
+
+  /* ========================
+     HOVER IMAGE
+  ======================== */
 
   onHoverSelected(event: any) {
 
@@ -132,12 +151,16 @@ export class AdminProductFormComponent implements OnInit {
 
     reader.onload = () => {
       this.hoverPreview = reader.result as string;
-      this.cdr.detectChanges();   // ✅ important
+      this.cdr.detectChanges();
     };
 
     reader.readAsDataURL(file);
 
   }
+
+  /* ========================
+     SAVE PRODUCT
+  ======================== */
 
   save(): void {
 
@@ -162,10 +185,12 @@ export class AdminProductFormComponent implements OnInit {
     formData.append('description', this.product.description || '');
     formData.append('sizes', JSON.stringify(this.product.sizes));
 
-    if (this.selectedFile) {
-      formData.append('image', this.selectedFile);
-    }
+    // Multiple Images
+    this.selectedFiles.forEach(file => {
+      formData.append('images', file);
+    });
 
+    // Hover Image
     if (this.hoverFile) {
       formData.append('hoverImage', this.hoverFile);
     }

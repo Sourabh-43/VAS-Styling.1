@@ -71,14 +71,16 @@ export class ProductComponent implements OnInit, OnDestroy {
           .subscribe({
             next: (data: Product) => {
 
-              this.product = {
-                ...data,
-                image: this.normalizeImage(data.image),
-                hoverImage: this.normalizeImage(
-                  data.hoverImage || data.image
-                )
-              };
+               const mainImage =
+                data.images?.[0] || data.image;
 
+                this.product = {
+                  ...data,
+                  image: this.normalizeImage(mainImage),
+                  hoverImage: this.normalizeImage(
+                    data.hoverImage || mainImage
+                  )
+                };
               this.selectedSize = null;
               this.showSizeError = false;
 
