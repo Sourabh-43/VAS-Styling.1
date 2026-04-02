@@ -6,8 +6,7 @@ export interface Product {
   price: number;
   stock: number;
 
-  images?: string[];   // ✅ new
-  image?: string;      // ✅ old support
+  images?: string[];
   hoverImage?: string;
 
   gender: 'men' | 'women';

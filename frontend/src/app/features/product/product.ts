@@ -71,16 +71,16 @@ export class ProductComponent implements OnInit, OnDestroy {
           .subscribe({
             next: (data: Product) => {
 
-               const mainImage =
-                data.images?.[0] || data.image;
+              this.product = {
+                ...data,
+                images: data.images?.map(img =>
+                  this.normalizeImage(img)
+                ),
+                hoverImage: this.normalizeImage(
+                  data.hoverImage || data.images?.[0]
+                )
+              };
 
-                this.product = {
-                  ...data,
-                  image: this.normalizeImage(mainImage),
-                  hoverImage: this.normalizeImage(
-                    data.hoverImage || mainImage
-                  )
-                };
               this.selectedSize = null;
               this.showSizeError = false;
 
@@ -109,7 +109,7 @@ export class ProductComponent implements OnInit, OnDestroy {
 
     if (!image) return 'assets/placeholder.png';
 
-    // already full url
+    // already full url (cloudinary)
     if (image.startsWith('http')) return image;
 
     // uploads path

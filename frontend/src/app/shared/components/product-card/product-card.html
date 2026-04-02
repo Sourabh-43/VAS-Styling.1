@@ -4,14 +4,14 @@
 
     <img
       class="main-img"
-      [src]="product.image"
+      [src]="product.images?.[0]"
       (error)="onImageError($event)"
       [alt]="product.name"
     />
 
     <img
       class="hover-img"
-      [src]="product.hoverImage || product.image"
+      [src]="product.hoverImage || product.images?.[0]"
       (error)="onImageError($event)"
       [alt]="product.name"
     />

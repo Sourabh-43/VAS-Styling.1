@@ -57,7 +57,7 @@ export class CartService {
         _id: product._id!,
         name: product.name,
         price: product.price,
-        image: product.images?.[0] || product.image || 'assets/placeholder.png',
+        image: product.images?.[0] || 'assets/placeholder.png',
         size,
         quantity: 1
       };
@@ -123,7 +123,7 @@ export class CartService {
   }
 
   /* =========================
-     CART RELOAD (🔥 IMPORTANT)
+     CART RELOAD
   ========================= */
 
   reloadCart() {

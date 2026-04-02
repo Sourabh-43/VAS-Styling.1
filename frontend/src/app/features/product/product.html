@@ -13,9 +13,9 @@
     <div class="image-section">
 
       <div class="image-box">
-        <img
+       <img
           class="product-image"
-          [src]="product.image"
+          [src]="product.images?.[0]"
           (error)="onImageError($event)"
           [alt]="product.name"
         />

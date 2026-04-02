@@ -69,13 +69,9 @@ export class AdminProductFormComponent implements OnInit {
           this.product = { ...existing };
 
           // Multiple images
-          if (existing.images?.length) {
-            this.imagePreviews = existing.images;
-          } 
-          // Old single image support
-          else if (existing.image) {
-            this.imagePreviews = [existing.image];
-          }
+                if (existing.images?.length) {
+                this.imagePreviews = existing.images;
+}
 
           // Hover image
           if (existing.hoverImage) {
@@ -109,32 +105,29 @@ export class AdminProductFormComponent implements OnInit {
   /* ========================
      MULTIPLE IMAGE SELECT
   ======================== */
+onFileSelected(event: any) {
 
-  onFileSelected(event: any) {
+  const files = Array.from(event.target.files).slice(0,3);
 
-    const files = event.target.files;
+  this.selectedFiles = [];
+  this.imagePreviews = [];
 
-    if (!files) return;
+  files.forEach((file: any) => {
 
-    this.selectedFiles = [];
-    this.imagePreviews = [];
+    this.selectedFiles.push(file);
 
-    for (let file of files) {
+    const reader = new FileReader();
 
-      this.selectedFiles.push(file);
+    reader.onload = () => {
+      this.imagePreviews.push(reader.result as string);
+      this.cdr.detectChanges();
+    };
 
-      const reader = new FileReader();
+    reader.readAsDataURL(file);
 
-      reader.onload = () => {
-        this.imagePreviews.push(reader.result as string);
-        this.cdr.detectChanges();
-      };
+  });
 
-      reader.readAsDataURL(file);
-
-    }
-
-  }
+}
 
   /* ========================
      HOVER IMAGE
