@@ -1,6 +1,8 @@
 const router = require('express').Router();
 const controller = require('../controllers/product.controller');
-const { protect, admin } = require('../middleware/auth');
+
+const auth = require('../middlewares/auth.middleware');
+const admin = require('../middlewares/admin.middleware');
 
 /* GET ALL PRODUCTS */
 router.get('/', controller.getProducts);
@@ -14,7 +16,7 @@ router.get('/:id', controller.getProductById);
 /* CREATE PRODUCT */
 router.post(
   '/',
-  protect,
+  auth,
   admin,
   controller.upload,
   controller.createProduct
@@ -23,7 +25,7 @@ router.post(
 /* UPDATE PRODUCT */
 router.put(
   '/:id',
-  protect,
+  auth,
   admin,
   controller.upload,
   controller.updateProduct
@@ -32,7 +34,7 @@ router.put(
 /* DELETE PRODUCT */
 router.delete(
   '/:id',
-  protect,
+  auth,
   admin,
   controller.deleteProduct
 );
